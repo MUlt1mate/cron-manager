@@ -11,27 +11,27 @@ use mult1mate\crontab\TaskRunInterface;
  * @property string $command
  * @property string $status
  * @property string $comment
- * @property string $ts
+ * @property \ActiveRecord\DateTime $ts
  */
 class Task extends \ActiveRecord\Model implements TaskInterface
 {
 
-    public static function task_get($task_id)
+    public static function taskGet($task_id)
     {
         return self::find($task_id);
     }
 
-    public static function get_all()
+    public static function getAll()
     {
         return self::all();
     }
 
-    public function task_delete()
+    public function taskDelete()
     {
         return $this->delete();
     }
 
-    public function task_save()
+    public function taskSave()
     {
         return $this->save();
     }

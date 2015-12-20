@@ -9,7 +9,7 @@ use mult1mate\crontab\TaskRunInterface;
  * @property int $task_id
  * @property string $status
  * @property int $execution_time
- * @property string $ts
+ * @property \ActiveRecord\DateTime $ts
  */
 class TaskRun extends \ActiveRecord\Model implements TaskRunInterface
 {

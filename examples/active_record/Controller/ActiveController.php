@@ -13,7 +13,7 @@ class ActiveController extends BaseController
 
     }
 
-    public function simple_task()
+    public function simpleTask()
     {
         echo 'This is a simple task';
     }

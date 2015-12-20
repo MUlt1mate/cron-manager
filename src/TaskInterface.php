@@ -17,13 +17,13 @@ interface TaskInterface
     const TASK_STATUS_ACTIVE = 'active';
     const TASK_STATUS_INACTIVE = 'inactive';
 
-    public static function task_get($task_id);
+    public static function taskGet($task_id);
 
-    public static function get_all();
+    public static function getAll();
 
-    public function task_delete();
+    public function taskDelete();
 
-    public function task_save();
+    public function taskSave();
 
     /**
      * @return TaskRunInterface

@@ -26,11 +26,11 @@ class TaskManager
         if (isset($comment))
             $task->setComment($comment);
 
-        $task->task_save();
+        $task->taskSave();
         return $task;
     }
 
-    public static function check_tasks($tasks)
+    public static function checkTasks($tasks)
     {
         $fieldFactory = new FieldFactory();
         foreach ($tasks as $t) {
