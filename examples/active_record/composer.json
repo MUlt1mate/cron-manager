@@ -1,0 +1,19 @@
+{
+  "name": "mult1mate/active_record",
+  "type": "example",
+  "authors": [
+    {
+      "name": "MUlt1mate",
+      "email": "multimate.abs@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php-activerecord/php-activerecord": "v1.1.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "mult1mate\\crontab\\": "../../src/"
+    }
+  }
+}

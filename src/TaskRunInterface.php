@@ -13,7 +13,7 @@ interface TaskRunInterface
     const RUN_STATUS_STARTED = 'started';
     const RUN_STATUS_COMPLETED = 'completed';
 
-    public function save();
+    public function saveTaskRun();
 
     /**
      * @return int

@@ -15,12 +15,19 @@ class TaskManager
      * @param TaskInterface $task
      * @param string $time_expression
      * @param string $command
-     * @param null $comment
-     * @return mixed
+     * @param string $comment
+     * @return TaskInterface
      */
-    public static function createTask($task, $time_expression, $command, $comment = null)
+    public static function editTask($task, $time_expression, $command, $comment = null)
     {
-        return $task->create($time_expression, $command, $comment);
+        $task->setStatus(TaskInterface::TASK_STATUS_ACTIVE);
+        $task->setCommand($command);
+        $task->setTime($time_expression);
+        if (isset($comment))
+            $task->setComment($comment);
+
+        $task->task_save();
+        return $task;
     }
 
     public static function check_tasks($tasks)
@@ -43,13 +50,14 @@ class TaskManager
     protected static function runTask($task)
     {
         $run = $task->createTaskRun();
+        $run->setTaskId($task->getTaskId());
         $run->setTs(date('Y-m-d H:i:s'));
         $run->setStatus(TaskRunInterface::RUN_STATUS_STARTED);
-        $run->save();
+        $run->saveTaskRun();
         $command = $task->getCommand();
         self::parseAndRunCommand($command);
         $run->setStatus(TaskRunInterface::RUN_STATUS_COMPLETED);
-        $run->save();
+        $run->saveTaskRun();
     }
 
     protected static function parseAndRunCommand($command)
@@ -57,6 +65,8 @@ class TaskManager
         $names = explode('::', $command);
         $class = $names[0];
         $method = $names[1];
+//        if (!class_exists($class))
+//            static::load_class($class);
         $obj = new $class();
         $obj->$method();
     }
