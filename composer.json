@@ -1,0 +1,12 @@
+{
+  "name": "mult1mate/crontab-manager",
+  "description": "Yet another crontab manager",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "MUlt1mate",
+      "email": "multimate.abs@gmail.com"
+    }
+  ]
+}
