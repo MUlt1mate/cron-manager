@@ -8,5 +8,13 @@
       "name": "MUlt1mate",
       "email": "multimate.abs@gmail.com"
     }
-  ]
+  ],
+  "require": {
+    "mtdowling/cron-expression": "v1.0.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "mult1mate\\crontab\\": "src/"
+    }
+  }
 }
