@@ -55,25 +55,37 @@ class TaskManager
         $run->setTs(date('Y-m-d H:i:s'));
         $run->setStatus(TaskRunInterface::RUN_STATUS_STARTED);
         $run->saveTaskRun();
+        $run_final_status = TaskRunInterface::RUN_STATUS_COMPLETED;
 
         $command = $task->getCommand();
         ob_start();
-        self::parseAndRunCommand($command);
+        $time_begin = microtime(true);
+        try {
+            self::parseAndRunCommand($command);
+        } catch (\Exception $e) {
+            echo 'Caught an exception: ' . get_class($e) . ': ' . $e->getMessage();
+            $run_final_status = TaskRunInterface::RUN_STATUS_ERROR;
+        }
         $output = ob_get_clean();
+        $time_end = microtime(true);
+        $time = round(($time_end - $time_begin), 2);
+        $run->setExecutionTime($time);
 
-        $run->setStatus(TaskRunInterface::RUN_STATUS_COMPLETED);
+        $run->setStatus($run_final_status);
         $run->saveTaskRun();
         return $output;
     }
 
     protected static function parseAndRunCommand($command)
     {
-        $names = explode('::', $command);
-        $class = $names[0];
-        $method = $names[1];
-//        if (!class_exists($class))
-//            static::load_class($class);
+        list($class, $method) = explode('::', $command);
+        if (!class_exists($class))
+            throw new CrontabManagerException('class ' . $class . ' not found');
+
+        //static::load_class($class);
         $obj = new $class();
+        if (!method_exists($obj, $method))
+            throw new CrontabManagerException('method ' . $method . ' not found in class ' . $class);
         $obj->$method();
     }
 }

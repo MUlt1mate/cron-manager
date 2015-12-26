@@ -51,7 +51,8 @@
 <script>
     $('.run_task').click(function () {
         if (confirm('Are you sure?')) {
-            $('#output_section').show().text('Running...');
+            $('#output_section').show();
+            $('#task_output_container').text('Running...');
             $.post('?m=runTask', {task_id: $(this).attr('href')}, function (data) {
                 $('#task_output_container').html(data);
             })
