@@ -8,12 +8,6 @@ use mult1mate\crontab\TaskManager;
  */
 class CronController extends BaseController
 {
-    public function __construct()
-    {
-        require_once 'views/template.php';
-        parent::__construct();
-    }
-
     public function index()
     {
         $this->renderView('tasks_list', ['tasks' => Task::getAll()]);
@@ -21,8 +15,22 @@ class CronController extends BaseController
 
     public function taskLog()
     {
-        $runs = TaskRun::all(['task_id' => $_GET['task_id']]);
+        $task_id = isset($_GET['task_id']) ? $_GET['task_id'] : null;
+        $runs = TaskRun::getLast($task_id);
         $this->renderView('runs_list', ['runs' => $runs]);
+    }
+
+    public function runTask()
+    {
+        if (isset($_POST['task_id'])) {
+            $task = Task::find($_POST['task_id']);
+            /**
+             * @var Task $task
+             */
+
+            echo TaskManager::runTask($task);
+        } else
+            echo 'empty task id';
     }
 
     public function taskEdit()

@@ -11,10 +11,14 @@ use mult1mate\crontab\TaskRunInterface;
  * @property string $command
  * @property string $status
  * @property string $comment
+ * @property array $taskruns
  * @property \ActiveRecord\DateTime $ts
  */
 class Task extends \ActiveRecord\Model implements TaskInterface
 {
+    static $has_many = [
+        ['taskruns', 'class_name' => 'TaskRun']
+    ];
 
     public static function taskGet($task_id)
     {

@@ -46,18 +46,24 @@ class TaskManager
 
     /**
      * @param TaskInterface $task
+     * @return string
      */
-    protected static function runTask($task)
+    public static function runTask($task)
     {
         $run = $task->createTaskRun();
         $run->setTaskId($task->getTaskId());
         $run->setTs(date('Y-m-d H:i:s'));
         $run->setStatus(TaskRunInterface::RUN_STATUS_STARTED);
         $run->saveTaskRun();
+
         $command = $task->getCommand();
+        ob_start();
         self::parseAndRunCommand($command);
+        $output = ob_get_clean();
+
         $run->setStatus(TaskRunInterface::RUN_STATUS_COMPLETED);
         $run->saveTaskRun();
+        return $output;
     }
 
     protected static function parseAndRunCommand($command)

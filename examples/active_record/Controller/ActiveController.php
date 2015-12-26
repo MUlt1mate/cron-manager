@@ -15,6 +15,7 @@ class ActiveController extends BaseController
 
     public function simpleTask()
     {
+        sleep(3);
         echo 'This is a simple task';
     }
 

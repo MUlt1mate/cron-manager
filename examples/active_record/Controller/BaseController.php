@@ -20,8 +20,10 @@ class BaseController
         $this->$method();
     }
 
-    protected function renderView($view, $params)
+    protected function renderView($view, $params, $template = true)
     {
+        if ($template)
+            require_once 'views/template.php';
         foreach ($params as $key => $value)
             $$key = $value;
         require_once "views/$view.php";
