@@ -28,9 +28,23 @@ class CronController extends BaseController
              * @var Task $task
              */
 
-            echo TaskManager::runTask($task);
+            $output = TaskManager::runTask($task);
+            echo htmlentities($output);
         } else
             echo 'empty task id';
+    }
+
+    public function getOutput()
+    {
+        if (isset($_POST['task_run_id'])) {
+            $run = TaskRun::find($_POST['task_run_id']);
+            /**
+             * @var TaskRun $run
+             */
+
+            echo htmlentities($run->getOutput());
+        } else
+            echo 'empty task run id';
     }
 
     public function taskEdit()

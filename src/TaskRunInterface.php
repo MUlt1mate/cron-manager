@@ -60,4 +60,14 @@ interface TaskRunInterface
      * @param string $ts
      */
     public function setTs($ts);
+
+    /**
+     * @return string
+     */
+    public function getOutput();
+
+    /**
+     * @param string $output
+     */
+    public function setOutput($output);
 }

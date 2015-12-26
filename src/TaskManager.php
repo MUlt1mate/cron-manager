@@ -63,10 +63,12 @@ class TaskManager
         try {
             self::parseAndRunCommand($command);
         } catch (\Exception $e) {
-            echo 'Caught an exception: ' . get_class($e) . ': ' . $e->getMessage();
+            echo ' Caught an exception: ' . get_class($e) . ': ' . $e->getMessage() . PHP_EOL;
             $run_final_status = TaskRunInterface::RUN_STATUS_ERROR;
         }
         $output = ob_get_clean();
+        $run->setOutput($output);
+
         $time_end = microtime(true);
         $time = round(($time_end - $time_begin), 2);
         $run->setExecutionTime($time);

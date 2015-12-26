@@ -14,6 +14,7 @@
         <th>Status</th>
         <th>Time</th>
         <th>Ts</th>
+        <th></th>
     </tr>
     <?php foreach ($runs as $r):
         /**
@@ -27,6 +28,35 @@
             <td><?= $r->status ?></td>
             <td><?= $r->execution_time ?></td>
             <td><?= $r->ts->format('Y-m-d H:i:s') ?></td>
+            <td>
+                <? if (!empty($r->output)): ?>
+                    <a href="<?= $r->task_run_id ?>" data-toggle="modal" data-target="#output_modal"
+                       class="show_output">Show output</a>
+                <? endif; ?>
+            </td>
         </tr>
     <?php endforeach; ?>
 </table>
+<div class="modal fade" tabindex="-1" role="dialog" id="output_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Task run output</h4>
+            </div>
+            <div class="modal-body" id="output_container">
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.show_output').click(function () {
+        $.post('?m=getOutput', {task_run_id: $(this).attr('href')}, function (data) {
+            //if you want to render html use .html(data) instead of .text(data)
+            $('#output_container').html(data);
+            return false;
+        })
+    })
+</script>

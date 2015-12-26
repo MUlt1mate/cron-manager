@@ -8,6 +8,7 @@ use mult1mate\crontab\TaskRunInterface;
  * @property int $task_run_id
  * @property int $task_id
  * @property string $status
+ * @property string $output
  * @property int $execution_time
  * @property Task $task
  * @property \ActiveRecord\DateTime $ts
@@ -25,6 +26,11 @@ class TaskRun extends \ActiveRecord\Model implements TaskRunInterface
         $conditions = ['order' => 'task_run_id desc', 'include' => ['task']];
 
         return self::find('all', $conditions);
+    }
+
+    public function saveTaskRun()
+    {
+        return $this->save();
     }
 
     /**
@@ -99,8 +105,13 @@ class TaskRun extends \ActiveRecord\Model implements TaskRunInterface
         $this->ts = $ts;
     }
 
-    public function saveTaskRun()
+    public function getOutput()
     {
-        return $this->save();
+        return $this->output;
+    }
+
+    public function setOutput($output)
+    {
+        $this->output = $output;
     }
 }
