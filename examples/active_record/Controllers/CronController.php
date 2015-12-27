@@ -10,7 +10,10 @@ class CronController extends BaseController
 {
     public function index()
     {
-        $this->renderView('tasks_list', ['tasks' => Task::getAll()]);
+        $this->renderView('tasks_list', [
+            'tasks' => Task::getAll(),
+            'methods' => TaskManager::getAllMethods(__DIR__),
+        ]);
     }
 
     public function taskLog()
@@ -29,10 +32,26 @@ class CronController extends BaseController
              */
 
             $output = TaskManager::runTask($task);
-            echo ($output);
-//            echo htmlentities($output);
+            echo($output);
+            //            echo htmlentities($output);
+        } elseif (isset($_POST['custom_task'])) {
+            $result = TaskManager::parseAndRunCommand($_POST['custom_task']);
+            echo ($result) ? ' success' : ' failed';
         } else
             echo 'empty task id';
+    }
+
+    public function getDates()
+    {
+        $time = $_POST['time'];
+        $dates = TaskManager::getRunDates($time);
+        echo '<ul>';
+        foreach ($dates as $d)
+            /**
+             * @var \DateTime $d
+             */
+            echo '<li>' . $d->format('Y-m-d H:i:s') . '</li>';
+        echo '</ul>';
     }
 
     public function getOutput()

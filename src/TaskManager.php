@@ -2,7 +2,6 @@
 namespace mult1mate\crontab;
 
 use Cron\CronExpression;
-use Cron\FieldFactory;
 
 /**
  * User: mult1mate
@@ -32,16 +31,26 @@ class TaskManager
 
     public static function checkTasks($tasks)
     {
-        $fieldFactory = new FieldFactory();
         foreach ($tasks as $t) {
             /**
              * @var TaskInterface $t
              */
 
-            $cron = new CronExpression($t->getTime(), $fieldFactory);
+            $cron = CronExpression::factory($t->getTime());
             if ($cron->isDue())
                 self::runTask($t);
         }
+    }
+
+    public static function getRunDates($time)
+    {
+        try {
+            $cron = CronExpression::factory($time);
+            $dates = $cron->getMultipleRunDates(10);
+        } catch (\Exception $e) {
+            return [];
+        }
+        return $dates;
     }
 
     /**
@@ -59,14 +68,11 @@ class TaskManager
 
         ob_start();
         $time_begin = microtime(true);
-        try {
-            $result = self::parseAndRunCommand($task->getCommand());
-            if (!$result)
-                $run_final_status = TaskRunInterface::RUN_STATUS_ERROR;
-        } catch (\Exception $e) {
-            echo ' Caught an exception: ' . get_class($e) . ': ' . $e->getMessage() . PHP_EOL;
+
+        $result = self::parseAndRunCommand($task->getCommand());
+        if (!$result)
             $run_final_status = TaskRunInterface::RUN_STATUS_ERROR;
-        }
+
         $output = ob_get_clean();
         $run->setOutput($output);
 
@@ -79,18 +85,24 @@ class TaskManager
         return $output;
     }
 
-    protected static function parseAndRunCommand($command)
+    public static function parseAndRunCommand($command)
     {
-        preg_match('/(\w+)::(\w+)\((.*)\)/', $command, $match);
-        list(, $class, $method, $args) = $match;
-        if (!class_exists($class))
-            throw new CrontabManagerException('class ' . $class . ' not found');
+        try {
+            preg_match('/(\w+)::(\w+)\((.*)\)/', $command, $match);
+            list(, $class, $method, $args) = $match;
+            if (!class_exists($class))
+                throw new CrontabManagerException('class ' . $class . ' not found');
 
-        //static::load_class($class);
-        $obj = new $class();
-        if (!method_exists($obj, $method))
-            throw new CrontabManagerException('method ' . $method . ' not found in class ' . $class);
-        return call_user_func_array([$obj, $method], self::prepare_args($args));
+            $obj = new $class();
+            if (!method_exists($obj, $method))
+                throw new CrontabManagerException('method ' . $method . ' not found in class ' . $class);
+
+            $result = call_user_func_array([$obj, $method], self::prepare_args($args));
+        } catch (\Exception $e) {
+            echo ' Caught an exception: ' . get_class($e) . ': ' . $e->getMessage() . PHP_EOL;
+            return false;
+        }
+        return $result;
     }
 
     protected static function prepare_args($args)

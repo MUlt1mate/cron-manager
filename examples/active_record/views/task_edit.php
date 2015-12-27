@@ -7,13 +7,8 @@
  * @var array $methods
  */
 ?>
-<div class="col-lg-6">
-    <form method="post">
-        <div class="form-group">
-            <label for="time">Time</label>
-            <input type="text" class="form-control" id="time" name="time" placeholder="* * * * *"
-                   value="<?= $task->time ?>">
-        </div>
+<form method="post">
+    <div class="col-lg-6">
         <div class="form-group">
             <label for="method">Methods</label>
             <select class="form-control" id="method">
@@ -49,10 +44,38 @@
         <?php endif; ?>
 
         <button type="submit" class="btn btn-primary">Save</button>
-    </form>
-</div>
-<script>
-    $('#method').change(function () {
-        $('#command').val($(this).val());
-    })
-</script>
+
+    </div>
+    <div class="col-lg-6">
+        <div class="form-group">
+            <label for="times">Predefined intervals</label>
+            <select class="form-control" id="times" style="width: 200px;">
+                <option></option>
+                <option value="* * * * *">Minutely</option>
+                <option value="0 * * * *">Hourly</option>
+                <option value="0 0 * * *">Daily</option>
+                <option value="0 0 * * 0">Weekly</option>
+                <option value="0 0 1 * *">Monthly</option>
+                <option value="0 0 1 1 *">Yearly</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="time">Time</label>
+            <input type="text" class="form-control" id="time" name="time" placeholder="* * * * *"
+                   value="<?= $task->time ?>" style="width: 200px;">
+        </div>
+    <pre>
+*    *    *    *    *
+-    -    -    -    -
+|    |    |    |    |
+|    |    |    |    |
+|    |    |    |    +----- day of week (0 - 7) (Sunday=0 or 7)
+|    |    |    +---------- month (1 - 12)
+|    |    +--------------- day of month (1 - 31)
+|    +-------------------- hour (0 - 23)
++------------------------- min (0 - 59)
+    </pre>
+        <h4>Next runs</h4>
+        <div id="dates_list"></div>
+    </div>
+</form>

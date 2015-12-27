@@ -4,6 +4,7 @@
  * Date: 21.12.15
  * Time: 0:38
  * @var array $tasks
+ * @var array $methods
  */
 ?>
 <table class="table table-bordered">
@@ -43,20 +44,29 @@
         </tr>
     <?php endforeach; ?>
 </table>
+<form class="form-inline">
+    <h3>Run custom task</h3>
+    <div class="form-group">
+        <label for="method">Methods</label>
+        <select class="form-control" id="method">
+            <option></option>
+            <? foreach ($methods as $class => $class_methods): ?>
+                <optgroup label="<?= $class ?>">
+                    <? foreach ($class_methods as $m): ?>
+                        <option value="<?= $class . '::' . $m . '()' ?>"><?= $m ?></option>
+                    <? endforeach; ?>
+                </optgroup>
+            <? endforeach; ?>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="command">Command</label>
+        <input type="text" class="form-control" id="command" name="command" placeholder="Controller::method" style="width: 300px;">
+    </div>
+    <input type="submit" value="Run" class="btn btn-primary" id="run_custom_task">
+</form>
 <div id="output_section" style="display: none;">
     <h3>Task output</h3>
     <div class="alert alert-info" id="task_output_container">
     </div>
 </div>
-<script>
-    $('.run_task').click(function () {
-        if (confirm('Are you sure?')) {
-            $('#output_section').show();
-            $('#task_output_container').text('Running...');
-            $.post('?m=runTask', {task_id: $(this).attr('href')}, function (data) {
-                $('#task_output_container').html(data);
-            })
-        }
-        return false;
-    });
-</script>
