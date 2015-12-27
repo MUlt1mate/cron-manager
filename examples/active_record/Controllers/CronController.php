@@ -29,7 +29,8 @@ class CronController extends BaseController
              */
 
             $output = TaskManager::runTask($task);
-            echo htmlentities($output);
+            echo ($output);
+//            echo htmlentities($output);
         } else
             echo 'empty task id';
     }
@@ -61,7 +62,10 @@ class CronController extends BaseController
             $task->save();
         }
 
-        $this->renderView('task_edit', ['task' => $task]);
+        $this->renderView('task_edit', [
+            'task' => $task,
+            'methods' => TaskManager::getAllMethods(__DIR__),
+        ]);
     }
 
 

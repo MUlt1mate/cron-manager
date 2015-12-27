@@ -19,4 +19,13 @@ class ActiveController extends BaseController
         echo 'This is a simple task';
     }
 
+    public function dateCheck($date)
+    {
+        if (date('Y-m-d') == $date)
+            echo 'matched';
+        else
+            echo 'not matches';
+        return true;
+    }
+
 }
