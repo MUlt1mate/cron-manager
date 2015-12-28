@@ -14,10 +14,6 @@ class BaseController
             $cfg->set_connections([
                 'development' => 'mysql://root:qwerty@localhost/crontab']);
         });
-
-        $method = (isset($_GET['m']) && method_exists($this, $_GET['m'])) ? $_GET['m'] : 'index';
-
-        $this->$method();
     }
 
     protected function renderView($view, $params, $template = true)

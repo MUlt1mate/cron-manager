@@ -14,7 +14,6 @@ $(function () {
     });
     $('.show_output').click(function () {
         $.post('?m=getOutput', {task_run_id: $(this).attr('href')}, function (data) {
-            //if you want to render html use .html(data) instead of .text(data)
             $('#output_container').html(data);
             return false;
         })

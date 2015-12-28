@@ -8,4 +8,17 @@ function __autoload($class_name)
 }
 
 spl_autoload_register('__autoload');
-new CronController();
+$controller = 'Cron';
+$method = 'index';
+
+if (isset($argv) && 2 < count($argv)) {
+    $controller = $argv[1];
+    $method = $argv[2];
+}
+if (isset($_GET['c']))
+    $controller = $_GET['c'];
+if (isset($_GET['m']))
+    $method = $_GET['m'];
+$controller_class = ucfirst($controller) . 'Controller';
+$c = new $controller_class();
+$c->$method();
