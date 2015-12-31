@@ -40,6 +40,11 @@ class Task extends \ActiveRecord\Model implements TaskInterface
         return $this->save();
     }
 
+    public static function createNew()
+    {
+        return new self();
+    }
+
     /**
      * @return TaskRunInterface
      */

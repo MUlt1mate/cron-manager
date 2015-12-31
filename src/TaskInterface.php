@@ -26,6 +26,11 @@ interface TaskInterface
     public function taskSave();
 
     /**
+     * @return TaskInterface
+     */
+    public static function createNew();
+
+    /**
      * @return TaskRunInterface
      */
     public function createTaskRun();

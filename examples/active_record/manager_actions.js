@@ -44,4 +44,18 @@ $(function () {
         $('#time').val($(this).val());
         getRunDates();
     });
+
+    $('#parse_crontab_form').submit(function () {
+        $.post('?m=parseCrontab', $(this).serialize(), function (data) {
+            var list='';
+            data.forEach(function (element) {
+                element.forEach(function (el) {
+                    list += '' + el +'<br>';
+                });
+                list +=  '<hr>';
+            });
+            $('#parse_result').html(list);
+        }, 'json');
+        return false;
+    });
 });

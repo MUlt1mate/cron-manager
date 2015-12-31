@@ -8,6 +8,7 @@ $menu = [
     'index' => 'Tasks list',
     'taskEdit' => 'Add new/edit task',
     'taskLog' => 'Logs',
+    'export' => 'Import/Export',
 ];
 ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

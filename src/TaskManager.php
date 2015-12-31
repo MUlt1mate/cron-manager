@@ -154,4 +154,52 @@ class TaskManager
 
         return $methods;
     }
+
+    /**
+     * @param string $cron
+     * @param TaskInterface $task_class
+     * @return array
+     */
+    public static function parse_crontab($cron, $task_class)
+    {
+        $cron_array = explode(PHP_EOL, $cron);
+        $comment = null;
+        $result = [];
+        foreach ($cron_array as $c) {
+            if (empty(trim($c)))
+                continue;
+            $r = [];
+            $r[] = $c;
+            if (preg_match('/(#?)(.*)cd.*php.*\.php\s+([\w\d-_]+)\s+([\w\d-_]+)/i', $c, $matches)) {
+                try {
+                    CronExpression::factory($matches[2]);
+                } catch (\Exception $e) {
+                    $r .= 'Time expression ' . $matches[2] . ' not valid';
+                    $result[] = $r;
+                    continue;
+                }
+                $task = $task_class::createNew();
+                $task->setTime(trim($matches[2]));
+                $command = ucfirst($matches[3]) . '::' . $matches[4] . '()';
+                $task->setCommand($command);
+                if (!empty($comment))
+                    $task->setComment($comment);
+                $status = empty($matches[1]) ? TaskInterface::TASK_STATUS_ACTIVE : TaskInterface::TASK_STATUS_INACTIVE;
+                $task->setStatus($status);
+                $task->setTs(date('Y-m-d H:i:s'));
+                $task->taskSave();
+                $r [] = 'Saved';
+
+                $comment = null;
+            } elseif (preg_match('/#([\w\d\s]+)/i', $c, $matches)) {
+                $comment = trim($matches[1]);
+                $r [] = 'Looks like a comment';
+            } else {
+                $r [] = 'Not matched';
+            }
+            $result[] = $r;
+        }
+
+        return $result;
+    }
 }

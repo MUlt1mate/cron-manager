@@ -16,6 +16,20 @@ class CronController extends BaseController
         ]);
     }
 
+    public function export()
+    {
+        $this->renderView('export', []);
+    }
+
+    public function parseCrontab()
+    {
+        if (isset($_POST['crontab'])) {
+            $cron = $_POST['crontab'];
+            $result = TaskManager::parse_crontab($cron, new Task());
+            echo json_encode($result);
+        }
+    }
+
     public function taskLog()
     {
         $task_id = isset($_GET['task_id']) ? $_GET['task_id'] : null;
