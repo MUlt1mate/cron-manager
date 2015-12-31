@@ -1,4 +1,5 @@
 <?php
+use mult1mate\crontab\TaskInterface;
 use mult1mate\crontab\TaskManager;
 
 /**
@@ -24,8 +25,7 @@ class CronController extends BaseController
     public function parseCrontab()
     {
         if (isset($_POST['crontab'])) {
-            $cron = $_POST['crontab'];
-            $result = TaskManager::parse_crontab($cron, new Task());
+            $result = TaskManager::parse_crontab($_POST['crontab'], new Task());
             echo json_encode($result);
         }
     }
@@ -40,14 +40,17 @@ class CronController extends BaseController
     public function runTask()
     {
         if (isset($_POST['task_id'])) {
-            $task = Task::find($_POST['task_id']);
-            /**
-             * @var Task $task
-             */
+            $tasks = !is_array($_POST['task_id']) ? [$_POST['task_id']] : $_POST['task_id'];
+            foreach ($tasks as $t) {
+                $task = Task::find($t);
+                /**
+                 * @var Task $task
+                 */
 
-            $output = TaskManager::runTask($task);
-            echo($output);
-            //            echo htmlentities($output);
+                $output = TaskManager::runTask($task);
+                echo($output . '<hr>');
+                //            echo htmlentities($output);
+            }
         } elseif (isset($_POST['custom_task'])) {
             $result = TaskManager::parseAndRunCommand($_POST['custom_task']);
             echo ($result) ? ' success' : ' failed';
@@ -101,6 +104,20 @@ class CronController extends BaseController
         ]);
     }
 
+    public function tasksUpdate()
+    {
+        if (isset($_POST['task_id'])) {
+            $tasks = Task::find($_POST['task_id']);
+            foreach ($tasks as $t) {
+                /**
+                 * @var Task $t
+                 */
+                $status = ('Enable' == $_POST['action']) ? TaskInterface::TASK_STATUS_ACTIVE : TaskInterface::TASK_STATUS_INACTIVE;
+                $t->setStatus($status);
+                $t->save();
+            }
+        }
+    }
 
     public function checkTasks()
     {
