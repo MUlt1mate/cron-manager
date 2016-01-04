@@ -17,7 +17,8 @@
         <th>Command</th>
         <th>Status</th>
         <th>Comment</th>
-        <th>Ts</th>
+        <th>Created</th>
+        <th>Updated</th>
         <th></th>
         <th></th>
         <th></th>
@@ -37,7 +38,8 @@
             <td><?= $t->command ?></td>
             <td><?= $t->status ?></td>
             <td><?= $t->comment ?></td>
-            <td><?= $t->ts->format('Y-m-d H:i:s') ?></td>
+            <td><?= $t->ts->format('Y-m-d H:i') ?></td>
+            <td><?= $t->ts_updated->format('Y-m-d H:i') ?></td>
             <td>
                 <a href="?m=taskEdit&task_id=<?= $t->task_id ?>">Edit</a>
             </td>

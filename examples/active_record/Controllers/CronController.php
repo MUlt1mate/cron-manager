@@ -25,7 +25,20 @@ class CronController extends BaseController
     public function parseCrontab()
     {
         if (isset($_POST['crontab'])) {
-            $result = TaskManager::parse_crontab($_POST['crontab'], new Task());
+            $result = TaskManager::parseCrontab($_POST['crontab'], new Task());
+            echo json_encode($result);
+        }
+    }
+
+    public function importTasks()
+    {
+        if (isset($_POST['folder'])) {
+            $tasks = Task::getAll();
+            $result = [];
+            foreach ($tasks as $t) {
+                $line = TaskManager::getTaskCrontabLine($t, $_POST['folder'], $_POST['php'], $_POST['file']);
+                $result[] = nl2br($line);
+            }
             echo json_encode($result);
         }
     }
@@ -94,8 +107,7 @@ class CronController extends BaseController
          * @var Task $task
          */
         if (!empty($_POST)) {
-            $task->set_attributes($_POST);
-            $task->save();
+            $task = TaskManager::editTask($task, $_POST['time'], $_POST['command'], $_POST['status'], $_POST['comment']);
         }
 
         $this->renderView('task_edit', [

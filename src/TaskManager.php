@@ -14,19 +14,31 @@ class TaskManager
      * @param TaskInterface $task
      * @param string $time_expression
      * @param string $command
+     * @param string $status
      * @param string $comment
      * @return TaskInterface
      */
-    public static function editTask($task, $time_expression, $command, $comment = null)
+    public static function editTask($task, $time_expression, $command, $status = TaskInterface::TASK_STATUS_ACTIVE, $comment = null)
     {
-        $task->setStatus(TaskInterface::TASK_STATUS_ACTIVE);
-        $task->setCommand($command);
+        $task->setStatus($status);
+        $task->setCommand(self::validateCommand($command));
         $task->setTime($time_expression);
         if (isset($comment))
             $task->setComment($comment);
 
+        $task->setTsUpdated(date('Y-m-d H:i:s'));
+
         $task->taskSave();
         return $task;
+    }
+
+    public static function validateCommand($command)
+    {
+        list($class, $method, $args) = self::parseCommand($command);
+        $args = array_map(function ($el) {
+            return trim($el);
+        }, $args);
+        return $class . '::' . $method . '(' . trim(implode(',', $args), ',') . ')';
     }
 
     public static function checkTasks($tasks)
@@ -35,6 +47,8 @@ class TaskManager
             /**
              * @var TaskInterface $t
              */
+            if (TaskInterface::TASK_STATUS_ACTIVE != $t->getStatus())
+                continue;
 
             $cron = CronExpression::factory($t->getTime());
             if ($cron->isDue())
@@ -88,8 +102,7 @@ class TaskManager
     public static function parseAndRunCommand($command)
     {
         try {
-            preg_match('/(\w+)::(\w+)\((.*)\)/', $command, $match);
-            list(, $class, $method, $args) = $match;
+            list($class, $method, $args) = self::parseCommand($command);
             if (!class_exists($class))
                 throw new CrontabManagerException('class ' . $class . ' not found');
 
@@ -97,7 +110,7 @@ class TaskManager
             if (!method_exists($obj, $method))
                 throw new CrontabManagerException('method ' . $method . ' not found in class ' . $class);
 
-            $result = call_user_func_array([$obj, $method], self::prepare_args($args));
+            $result = call_user_func_array([$obj, $method], $args);
         } catch (\Exception $e) {
             echo ' Caught an exception: ' . get_class($e) . ': ' . $e->getMessage() . PHP_EOL;
             return false;
@@ -105,12 +118,14 @@ class TaskManager
         return $result;
     }
 
-    protected static function prepare_args($args)
+    protected static function parseCommand($command)
     {
-        $args = explode(',', $args);
-        return array_map(function ($a) {
-            return trim($a);
-        }, $args);
+        preg_match('/(\w+)::(\w+)\((.*)\)/', $command, $match);
+        return [
+            $match[1],
+            $match[2],
+            explode(',', $match[3])
+        ];
     }
 
     public static function getControllerMethods($class)
@@ -160,7 +175,7 @@ class TaskManager
      * @param TaskInterface $task_class
      * @return array
      */
-    public static function parse_crontab($cron, $task_class)
+    public static function parseCrontab($cron, $task_class)
     {
         $cron_array = explode(PHP_EOL, $cron);
         $comment = null;
@@ -170,7 +185,7 @@ class TaskManager
                 continue;
             $r = [];
             $r[] = $c;
-            if (preg_match('/(#?)(.*)cd.*php.*\.php\s+([\w\d-_]+)\s+([\w\d-_]+)/i', $c, $matches)) {
+            if (preg_match('/(#?)(.*)cd.*php.*\.php\s+([\w\d-_]+)\s+([\w\d-_]+)\s*([\d\w-_\s]+)?(\d[\d>&\s]+)(.*)?/i', $c, $matches)) {
                 try {
                     CronExpression::factory($matches[2]);
                 } catch (\Exception $e) {
@@ -180,7 +195,8 @@ class TaskManager
                 }
                 $task = $task_class::createNew();
                 $task->setTime(trim($matches[2]));
-                $command = ucfirst($matches[3]) . '::' . $matches[4] . '()';
+                $arguments = str_replace(' ', ',', trim($matches[5]));
+                $command = ucfirst($matches[3]) . '::' . $matches[4] . '(' . $arguments . ')';
                 $task->setCommand($command);
                 if (!empty($comment))
                     $task->setComment($comment);
@@ -188,6 +204,7 @@ class TaskManager
                 $task->setStatus($status);
                 $task->setTs(date('Y-m-d H:i:s'));
                 $task->taskSave();
+                //$output = $matches[7];
                 $r [] = 'Saved';
 
                 $comment = null;
@@ -201,5 +218,25 @@ class TaskManager
         }
 
         return $result;
+    }
+
+    /**
+     * @param TaskInterface $task
+     * @param $path
+     * @param $php_bin
+     * @param $input_file
+     * @return string
+     */
+    public static function getTaskCrontabLine($task, $path, $php_bin, $input_file)
+    {
+        $str = '';
+        $comment = $task->getComment();
+        if (!empty($comment))
+            $str .= '#' . $comment . PHP_EOL;
+        if (TaskInterface::TASK_STATUS_ACTIVE != $task->getStatus())
+            $str .= '#';
+        list($class, $method, $args) = self::parseCommand($task->getCommand());
+        $str .= $task->getTime() . ' cd ' . $path . '; ' . $php_bin . ' ' . $input_file . ' ' . $class . ' ' . $method . ' ' . implode(' ', $args) . ' 2>&1 > /dev/null';
+        return $str . PHP_EOL;
     }
 }

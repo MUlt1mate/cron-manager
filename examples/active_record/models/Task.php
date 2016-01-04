@@ -13,6 +13,7 @@ use mult1mate\crontab\TaskRunInterface;
  * @property string $comment
  * @property array $taskruns
  * @property \ActiveRecord\DateTime $ts
+ * @property \ActiveRecord\DateTime $ts_updated
  */
 class Task extends \ActiveRecord\Model implements TaskInterface
 {
@@ -139,5 +140,21 @@ class Task extends \ActiveRecord\Model implements TaskInterface
     public function setTs($ts)
     {
         $this->ts = $ts;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTsUpdated()
+    {
+        return $this->ts_updated;
+    }
+
+    /**
+     * @param mixed $ts
+     */
+    public function setTsUpdated($ts)
+    {
+        $this->ts_updated = $ts;
     }
 }

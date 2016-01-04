@@ -89,4 +89,14 @@ interface TaskInterface
      * @param string $ts
      */
     public function setTs($ts);
+
+    /**
+     * @return string
+     */
+    public function getTsUpdated();
+
+    /**
+     * @param string $ts
+     */
+    public function setTsUpdated($ts);
 }

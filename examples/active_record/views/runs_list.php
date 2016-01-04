@@ -13,7 +13,7 @@
         <th>Command</th>
         <th>Status</th>
         <th>Time</th>
-        <th>Ts</th>
+        <th>Started</th>
         <th></th>
     </tr>
     <?php foreach ($runs as $r):
