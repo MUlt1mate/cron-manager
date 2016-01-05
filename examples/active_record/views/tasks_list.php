@@ -91,6 +91,5 @@
 </form>
 <div id="output_section" style="display: none;">
     <h3>Task output</h3>
-    <div class="alert alert-info" id="task_output_container">
-    </div>
+    <pre id="task_output_container"></pre>
 </div>

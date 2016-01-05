@@ -8,7 +8,7 @@ function __autoload($class_name)
 }
 
 spl_autoload_register('__autoload');
-$controller = 'Cron';
+$controller = 'tasks';
 $method = 'index';
 
 if (isset($argv) && 2 < count($argv)) {

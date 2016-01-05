@@ -7,7 +7,7 @@ use mult1mate\crontab\TaskManager;
  * Date: 20.12.15
  * Time: 20:56
  */
-class CronController extends BaseController
+class TasksController extends BaseController
 {
     public function index()
     {
@@ -66,7 +66,7 @@ class CronController extends BaseController
             }
         } elseif (isset($_POST['custom_task'])) {
             $result = TaskManager::parseAndRunCommand($_POST['custom_task']);
-            echo ($result) ? ' success' : ' failed';
+            echo ($result) ? 'success' : 'failed';
         } else
             echo 'empty task id';
     }

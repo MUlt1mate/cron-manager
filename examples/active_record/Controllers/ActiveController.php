@@ -13,19 +13,26 @@ class ActiveController extends BaseController
 
     }
 
-    public function simpleTask()
+    public function randomResult()
     {
-        sleep(3);
-        echo 'This is a simple task';
-    }
-
-    public function dateCheck($date)
-    {
-        if (date('Y-m-d') == $date)
-            echo 'matched';
-        else
-            echo 'not matches';
-        return true;
+        $rand = rand(0, 4);
+        echo 'The winner is number ' . $rand . PHP_EOL;
+        switch ($rand) {
+            case 0:
+                die('Bad result');
+            case 1:
+                return true;
+            case 2:
+                return false;
+            case 3:
+                throw new Exception('Unexpected situation');
+            case 4:
+                $micro_seconds = rand(1000000, 4000000);
+                echo 'Going to wait for some time' . PHP_EOL;
+                usleep($micro_seconds);
+                return true;
+        }
+        return false;
     }
 
 }

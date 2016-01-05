@@ -112,7 +112,7 @@ class TaskManager
 
             $result = call_user_func_array([$obj, $method], $args);
         } catch (\Exception $e) {
-            echo ' Caught an exception: ' . get_class($e) . ': ' . $e->getMessage() . PHP_EOL;
+            echo 'Caught an exception: ' . get_class($e) . ': ' . PHP_EOL . $e->getMessage() . PHP_EOL;
             return false;
         }
         return $result;
@@ -120,12 +120,15 @@ class TaskManager
 
     protected static function parseCommand($command)
     {
-        preg_match('/(\w+)::(\w+)\((.*)\)/', $command, $match);
-        return [
-            $match[1],
-            $match[2],
-            explode(',', $match[3])
-        ];
+        if (preg_match('/(\w+)::(\w+)\((.*)\)/', $command, $match)) {
+            ;
+            return [
+                $match[1],
+                $match[2],
+                explode(',', $match[3])
+            ];
+        } else
+            throw new CrontabManagerException('Command not recognized');
     }
 
     public static function getControllerMethods($class)

@@ -39,6 +39,5 @@
             <input type="submit" value="Export" class="btn btn-primary">
         </div>
     </form>
-    <div id="export_result">
-    </div>
+    <code id="export_result"></code>
 </div>
