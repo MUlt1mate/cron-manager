@@ -19,11 +19,11 @@ class TaskRun extends \ActiveRecord\Model implements TaskRunInterface
         ['task']
     ];
 
-    public static function getLast($task_id = null)
+    public static function getLast($task_id = null, $count = 100)
     {
+        $conditions = ['order' => 'task_run_id desc', 'include' => ['task'], 'limit' => $count];
         if ($task_id)
             $conditions['conditions'] = ['task_id' => $task_id];
-        $conditions = ['order' => 'task_run_id desc', 'include' => ['task']];
 
         return self::find('all', $conditions);
     }

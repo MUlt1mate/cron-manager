@@ -136,4 +136,16 @@ class CronController extends BaseController
         TaskManager::checkTasks(Task::getAll());
     }
 
+    public function tasksReport()
+    {
+        $date_begin = isset($_GET['date_begin']) ? $_GET['date_begin'] : date('Y-m-d', strtotime('-6 day'));
+        $date_end = isset($_GET['date_end']) ? $_GET['date_end'] : date('Y-m-d');
+
+        $this->renderView('report', [
+            'report' => Task::getReport($date_begin, $date_end),
+            'date_begin' => $date_begin,
+            'date_end' => $date_end,
+        ]);
+    }
+
 }

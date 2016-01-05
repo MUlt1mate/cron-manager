@@ -1,4 +1,5 @@
 <?php
+use mult1mate\crontab\DbHelper;
 use mult1mate\crontab\TaskInterface;
 use mult1mate\crontab\TaskRunInterface;
 
@@ -29,6 +30,11 @@ class Task extends \ActiveRecord\Model implements TaskInterface
     public static function getAll()
     {
         return self::all();
+    }
+
+    public static function getReport($date_begin, $date_end)
+    {
+        return self::query(DbHelper::getReportSql(), [$date_begin, $date_end])->fetchAll();
     }
 
     public function taskDelete()

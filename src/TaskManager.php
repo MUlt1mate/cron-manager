@@ -56,11 +56,11 @@ class TaskManager
         }
     }
 
-    public static function getRunDates($time)
+    public static function getRunDates($time, $count = 10)
     {
         try {
             $cron = CronExpression::factory($time);
-            $dates = $cron->getMultipleRunDates(10);
+            $dates = $cron->getMultipleRunDates($count);
         } catch (\Exception $e) {
             return [];
         }
