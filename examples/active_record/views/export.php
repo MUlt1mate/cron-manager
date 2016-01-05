@@ -22,14 +22,14 @@
 
 <div class="col-lg-6">
     <h2>Export</h2>
-    <form class="form-inline" id="import_form">
+    <form class="form-inline" id="export_form">
         <div class="form-group">
             <label class="control-label" for="php">Path to PHP</label>
             <input type="text" class="form-control" name="php" id="php" value="/usr/bin/php" style="width: 100px;">
         </div>
         <div class="form-group">
             <label class="control-label" for="folder">Path to folder</label>
-            <input type="text" class="form-control" name="folder" id="folder" value="">
+            <input type="text" class="form-control" name="folder" id="folder" value="/home/project/">
         </div>
         <div class="form-group">
             <label class="control-label" for="file">php file</label>

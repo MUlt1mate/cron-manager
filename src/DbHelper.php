@@ -20,7 +20,7 @@ class DbHelper
         count(*) AS runs
         FROM task_runs AS tr
         LEFT JOIN tasks AS t ON t.task_id=tr.task_id
-        WHERE tr.ts BETWEEN ? AND ?
+        WHERE tr.ts BETWEEN ? AND ? + INTERVAL 1 DAY
         GROUP BY command
         ORDER BY tr.task_id";
     }

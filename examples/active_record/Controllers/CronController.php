@@ -12,7 +12,7 @@ class CronController extends BaseController
     public function index()
     {
         $this->renderView('tasks_list', [
-            'tasks' => Task::getAll(),
+            'tasks' => Task::getList(),
             'methods' => TaskManager::getAllMethods(__DIR__),
         ]);
     }
@@ -30,10 +30,10 @@ class CronController extends BaseController
         }
     }
 
-    public function importTasks()
+    public function exportTasks()
     {
         if (isset($_POST['folder'])) {
-            $tasks = Task::getAll();
+            $tasks = Task::getList();
             $result = [];
             foreach ($tasks as $t) {
                 $line = TaskManager::getTaskCrontabLine($t, $_POST['folder'], $_POST['php'], $_POST['file']);
@@ -124,8 +124,12 @@ class CronController extends BaseController
                 /**
                  * @var Task $t
                  */
-                $status = ('Enable' == $_POST['action']) ? TaskInterface::TASK_STATUS_ACTIVE : TaskInterface::TASK_STATUS_INACTIVE;
-                $t->setStatus($status);
+                $action_status = [
+                    'Enable' => TaskInterface::TASK_STATUS_ACTIVE,
+                    'Disable' => TaskInterface::TASK_STATUS_INACTIVE,
+                    'Delete' => TaskInterface::TASK_STATUS_DELETED,
+                ];
+                $t->setStatus($action_status[$_POST['action']]);
                 $t->save();
             }
         }

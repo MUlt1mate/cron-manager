@@ -16,6 +16,7 @@ interface TaskInterface
 {
     const TASK_STATUS_ACTIVE = 'active';
     const TASK_STATUS_INACTIVE = 'inactive';
+    const TASK_STATUS_DELETED = 'deleted';
 
     public static function taskGet($task_id);
 

@@ -90,8 +90,8 @@ $(function () {
         }, 'json');
         return false;
     });
-    $('#import_form').submit(function () {
-        $.post('?m=importTasks', $(this).serialize(), function (data) {
+    $('#export_form').submit(function () {
+        $.post('?m=exportTasks', $(this).serialize(), function (data) {
             var list = '';
             data.forEach(function (element) {
                 list += '' + element + '<br>';

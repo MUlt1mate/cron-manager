@@ -59,6 +59,7 @@
         <select class="form-control" id="action">
             <option>Enable</option>
             <option>Disable</option>
+            <option>Delete</option>
             <option>Run</option>
         </select>
     </div>

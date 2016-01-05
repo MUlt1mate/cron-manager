@@ -27,6 +27,14 @@ class Task extends \ActiveRecord\Model implements TaskInterface
         return self::find($task_id);
     }
 
+    public static function getList()
+    {
+        return self::find('all', [
+            'conditions' => ['status in (?)', [TaskInterface::TASK_STATUS_ACTIVE, TaskInterface::TASK_STATUS_INACTIVE]],
+            'order' => 'status, task_id desc',
+        ]);
+    }
+
     public static function getAll()
     {
         return self::all();
