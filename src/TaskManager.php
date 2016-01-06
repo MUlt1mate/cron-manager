@@ -193,7 +193,7 @@ class TaskManager
                 try {
                     CronExpression::factory($matches[2]);
                 } catch (\Exception $e) {
-                    $r .= 'Time expression ' . $matches[2] . ' not valid';
+                    $r[] = 'Time expression ' . $matches[2] . ' not valid';
                     $result[] = $r;
                     continue;
                 }

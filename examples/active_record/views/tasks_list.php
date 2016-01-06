@@ -64,7 +64,7 @@
         </select>
     </div>
     <div class="form-group">
-        <input type="submit" value="Execute" class="btn btn-primary" id="execute_action">
+        <input type="submit" value="Apply" class="btn btn-primary" id="execute_action">
     </div>
 </form>
 <form class="form-inline">
