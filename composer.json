@@ -1,8 +1,10 @@
 {
-  "name": "mult1mate/crontab-manager",
-  "description": "Yet another crontab manager",
+  "name": "mult1mate/cron-manager",
+  "description": "Flexible cron tasks manager for MVC-type applications",
   "minimum-stability": "stable",
-  "license": "proprietary",
+  "keywords": ["cron","crontab","task manager"],
+  "homepage": "https://cron.multimate.ru",
+  "license": "MIT",
   "authors": [
     {
       "name": "MUlt1mate",
@@ -10,6 +12,7 @@
     }
   ],
   "require": {
+    "php": ">=5.4.0",
     "mtdowling/cron-expression": "v1.0.4"
   },
   "autoload": {

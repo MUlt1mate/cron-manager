@@ -184,7 +184,8 @@ class TaskManager
         $comment = null;
         $result = [];
         foreach ($cron_array as $c) {
-            if (empty(trim($c)))
+            $c = trim($c);
+            if (empty($c))
                 continue;
             $r = [];
             $r[] = $c;

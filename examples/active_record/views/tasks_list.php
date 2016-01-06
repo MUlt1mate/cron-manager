@@ -73,13 +73,13 @@
         <label for="method">Methods</label>
         <select class="form-control" id="method">
             <option></option>
-            <? foreach ($methods as $class => $class_methods): ?>
+            <?php foreach ($methods as $class => $class_methods): ?>
                 <optgroup label="<?= $class ?>">
-                    <? foreach ($class_methods as $m): ?>
+                    <?php foreach ($class_methods as $m): ?>
                         <option value="<?= $class . '::' . $m . '()' ?>"><?= $m ?></option>
-                    <? endforeach; ?>
+                    <?php endforeach; ?>
                 </optgroup>
-            <? endforeach; ?>
+            <?php endforeach; ?>
         </select>
     </div>
     <div class="form-group">

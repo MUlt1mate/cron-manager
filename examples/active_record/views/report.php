@@ -30,7 +30,7 @@
         <th>Error</th>
         <th>All</th>
     </tr>
-    <? foreach ($report as $r): ?>
+    <?php foreach ($report as $r): ?>
         <tr>
             <td><?= $r['command'] ?></td>
             <td><?= $r['completed'] ?></td>
@@ -38,5 +38,5 @@
             <td><?= $r['error'] ?></td>
             <th><?= $r['runs'] ?></th>
         </tr>
-    <? endforeach; ?>
+    <?php endforeach; ?>
 </table>

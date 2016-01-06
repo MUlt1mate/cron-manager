@@ -29,10 +29,10 @@
             <td><?= $r->execution_time ?></td>
             <td><?= $r->ts->format('Y-m-d H:i:s') ?></td>
             <td>
-                <? if (!empty($r->output)): ?>
+                <?php if (!empty($r->output)): ?>
                     <a href="<?= $r->task_run_id ?>" data-toggle="modal" data-target="#output_modal"
                        class="show_output">Show output</a>
-                <? endif; ?>
+                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>
