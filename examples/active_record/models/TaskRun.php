@@ -1,4 +1,5 @@
 <?php
+use ActiveRecord\Model;
 use mult1mate\crontab\TaskRunInterface;
 
 /**
@@ -13,7 +14,7 @@ use mult1mate\crontab\TaskRunInterface;
  * @property Task $task
  * @property \ActiveRecord\DateTime $ts
  */
-class TaskRun extends \ActiveRecord\Model implements TaskRunInterface
+class TaskRun extends Model implements TaskRunInterface
 {
     static $belongs_to = [
         ['task']

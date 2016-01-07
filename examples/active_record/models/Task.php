@@ -1,4 +1,5 @@
 <?php
+use ActiveRecord\Model;
 use mult1mate\crontab\DbHelper;
 use mult1mate\crontab\TaskInterface;
 use mult1mate\crontab\TaskRunInterface;
@@ -16,7 +17,7 @@ use mult1mate\crontab\TaskRunInterface;
  * @property \ActiveRecord\DateTime $ts
  * @property \ActiveRecord\DateTime $ts_updated
  */
-class Task extends \ActiveRecord\Model implements TaskInterface
+class Task extends Model implements TaskInterface
 {
     static $has_many = [
         ['taskruns', 'class_name' => 'TaskRun']

@@ -9,11 +9,13 @@ use mult1mate\crontab\TaskManager;
  */
 class TasksController extends BaseController
 {
+    const CONTROLLERS_FOLDER = __DIR__;
+
     public function index()
     {
         $this->renderView('tasks_list', [
             'tasks' => Task::getList(),
-            'methods' => TaskManager::getAllMethods(__DIR__),
+            'methods' => TaskManager::getAllMethods(self::CONTROLLERS_FOLDER),
         ]);
     }
 
@@ -75,6 +77,10 @@ class TasksController extends BaseController
     {
         $time = $_POST['time'];
         $dates = TaskManager::getRunDates($time);
+        if (empty($dates)) {
+            echo 'Invalid expression';
+            return;
+        }
         echo '<ul>';
         foreach ($dates as $d)
             /**
@@ -112,7 +118,7 @@ class TasksController extends BaseController
 
         $this->renderView('task_edit', [
             'task' => $task,
-            'methods' => TaskManager::getAllMethods(__DIR__),
+            'methods' => TaskManager::getAllMethods(self::CONTROLLERS_FOLDER),
         ]);
     }
 
@@ -137,7 +143,7 @@ class TasksController extends BaseController
 
     public function checkTasks()
     {
-        TaskManager::checkTasks(Task::getAll());
+        TaskManager::checkAndRunTasks(Task::getAll());
     }
 
     public function tasksReport()

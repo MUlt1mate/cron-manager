@@ -32,6 +32,11 @@ class TaskManager
         return $task;
     }
 
+    /**
+     * @param string $command
+     * @return string
+     * @throws CrontabManagerException
+     */
     public static function validateCommand($command)
     {
         list($class, $method, $args) = self::parseCommand($command);
@@ -41,8 +46,13 @@ class TaskManager
         return $class . '::' . $method . '(' . trim(implode(',', $args), ',') . ')';
     }
 
-    public static function checkTasks($tasks)
+    /**
+     * Runs active tasks if current time matches with time expression
+     * @param array $tasks
+     */
+    public static function checkAndRunTasks($tasks)
     {
+        $date = date('Y-m-d H:i:s');
         foreach ($tasks as $t) {
             /**
              * @var TaskInterface $t
@@ -51,11 +61,18 @@ class TaskManager
                 continue;
 
             $cron = CronExpression::factory($t->getTime());
-            if ($cron->isDue())
+
+            if ($cron->isDue($date))
                 self::runTask($t);
         }
     }
 
+    /**
+     * Returns next run dates for time expression
+     * @param string $time
+     * @param int $count
+     * @return array
+     */
     public static function getRunDates($time, $count = 10)
     {
         try {
@@ -68,6 +85,7 @@ class TaskManager
     }
 
     /**
+     * Runs task and returns output
      * @param TaskInterface $task
      * @return string
      */
@@ -99,6 +117,10 @@ class TaskManager
         return $output;
     }
 
+    /**
+     * @param string $command
+     * @return mixed
+     */
     public static function parseAndRunCommand($command)
     {
         try {
@@ -118,6 +140,11 @@ class TaskManager
         return $result;
     }
 
+    /**
+     * @param string $command
+     * @return array
+     * @throws CrontabManagerException
+     */
     protected static function parseCommand($command)
     {
         if (preg_match('/(\w+)::(\w+)\((.*)\)/', $command, $match)) {
@@ -131,6 +158,12 @@ class TaskManager
             throw new CrontabManagerException('Command not recognized');
     }
 
+    /**
+     * Returns all public methods for class
+     * @param string $class
+     * @return array
+     * @throws CrontabManagerException
+     */
     public static function getControllerMethods($class)
     {
         if (!class_exists($class))
@@ -145,7 +178,13 @@ class TaskManager
         return ($result_methods);
     }
 
-    public static function getControllersList($paths)
+    /**
+     * Returns names of all php files in directories
+     * @param array $paths
+     * @return array
+     * @throws CrontabManagerException
+     */
+    protected static function getControllersList($paths)
     {
         $controllers = [];
         foreach ($paths as $p) {
@@ -160,6 +199,12 @@ class TaskManager
         return $controllers;
     }
 
+    /**
+     * Scan folders for classes and return all their public methods
+     * @param string|array $folder
+     * @return array
+     * @throws CrontabManagerException
+     */
     public static function getAllMethods($folder)
     {
         if (!is_array($folder))
@@ -225,10 +270,11 @@ class TaskManager
     }
 
     /**
+     * Formats task line for export
      * @param TaskInterface $task
-     * @param $path
-     * @param $php_bin
-     * @param $input_file
+     * @param string $path
+     * @param string $php_bin
+     * @param string $input_file
      * @return string
      */
     public static function getTaskCrontabLine($task, $path, $php_bin, $input_file)
