@@ -13,7 +13,7 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "mtdowling/cron-expression": "v1.0.4"
+    "mtdowling/cron-expression": "dev-master"
   },
   "autoload": {
     "psr-4": {
