@@ -10,6 +10,11 @@ use Cron\CronExpression;
  */
 class TaskManager
 {
+    const SETTING_LOAD_CLASS = 'load_class';
+    const SETTING_CLASS_FOLDERS = 'class_folders';
+    protected static $load_class = false;
+    protected static $class_folders = [];
+
     /**
      * @param TaskInterface $task
      * @param string $time_expression
@@ -23,8 +28,9 @@ class TaskManager
         $task->setStatus($status);
         $task->setCommand(self::validateCommand($command));
         $task->setTime($time_expression);
-        if (isset($comment))
+        if (isset($comment)) {
             $task->setComment($comment);
+        }
 
         $task->setTsUpdated(date('Y-m-d H:i:s'));
 
@@ -57,13 +63,15 @@ class TaskManager
             /**
              * @var TaskInterface $t
              */
-            if (TaskInterface::TASK_STATUS_ACTIVE != $t->getStatus())
+            if (TaskInterface::TASK_STATUS_ACTIVE != $t->getStatus()) {
                 continue;
+            }
 
             $cron = CronExpression::factory($t->getTime());
 
-            if ($cron->isDue($date))
+            if ($cron->isDue($date)) {
                 self::runTask($t);
+            }
         }
     }
 
@@ -102,8 +110,9 @@ class TaskManager
         $time_begin = microtime(true);
 
         $result = self::parseAndRunCommand($task->getCommand());
-        if (!$result)
+        if (!$result) {
             $run_final_status = TaskRunInterface::RUN_STATUS_ERROR;
+        }
 
         $output = ob_get_clean();
         $run->setOutput($output);
@@ -125,12 +134,14 @@ class TaskManager
     {
         try {
             list($class, $method, $args) = self::parseCommand($command);
-            if (!class_exists($class))
-                throw new CrontabManagerException('class ' . $class . ' not found');
+            if (!class_exists($class)) {
+                self::loadController($class);
+            }
 
             $obj = new $class();
-            if (!method_exists($obj, $method))
+            if (!method_exists($obj, $method)) {
                 throw new CrontabManagerException('method ' . $method . ' not found in class ' . $class);
+            }
 
             $result = call_user_func_array([$obj, $method], $args);
         } catch (\Exception $e) {
@@ -148,14 +159,32 @@ class TaskManager
     protected static function parseCommand($command)
     {
         if (preg_match('/(\w+)::(\w+)\((.*)\)/', $command, $match)) {
-            ;
             return [
                 $match[1],
                 $match[2],
                 explode(',', $match[3])
             ];
-        } else
+        } else {
             throw new CrontabManagerException('Command not recognized');
+        }
+    }
+
+    protected static function loadController($class_name)
+    {
+        if (self::$load_class) {
+            foreach (self::$class_folders as $f) {
+                $f = rtrim($f, '/');
+                $filename = $f . '/' . $class_name . '.php';
+                if (file_exists($filename)) {
+                    if (class_exists($class_name)) {
+                        require_once $filename;
+                    }
+                    return true;
+                }
+            }
+        }
+
+        throw new CrontabManagerException('class ' . $class_name . ' not found');
     }
 
     /**
@@ -166,8 +195,9 @@ class TaskManager
      */
     public static function getControllerMethods($class)
     {
-        if (!class_exists($class))
+        if (!class_exists($class)) {
             throw new CrontabManagerException('class ' . $class . ' not found');
+        }
         $class_methods = get_class_methods($class);
         if ($parent_class = get_parent_class($class)) {
             $parent_class_methods = get_class_methods($parent_class);
@@ -188,12 +218,14 @@ class TaskManager
     {
         $controllers = [];
         foreach ($paths as $p) {
-            if (!file_exists($p))
+            if (!file_exists($p)) {
                 throw new CrontabManagerException('folder ' . $p . ' does not exist');
+            }
             $files = scandir($p);
             foreach ($files as $f) {
-                if (preg_match('/^([A-Z]\w+)\.php$/', $f, $match))
+                if (preg_match('/^([A-Z]\w+)\.php$/', $f, $match)) {
                     $controllers[] = $match[1];
+                }
             }
         }
         return $controllers;
@@ -207,11 +239,15 @@ class TaskManager
      */
     public static function getAllMethods($folder)
     {
-        if (!is_array($folder))
+        if (!is_array($folder)) {
             $folder = [$folder];
+        }
         $methods = [];
         $controllers = self::getControllersList($folder);
         foreach ($controllers as $c) {
+            if (!class_exists($c)) {
+                self::loadController($c);
+            }
             $methods[$c] = self::getControllerMethods($c);
         }
 
@@ -230,11 +266,13 @@ class TaskManager
         $result = [];
         foreach ($cron_array as $c) {
             $c = trim($c);
-            if (empty($c))
+            if (empty($c)) {
                 continue;
+            }
             $r = [];
             $r[] = $c;
-            if (preg_match('/(#?)(.*)cd.*php.*\.php\s+([\w\d-_]+)\s+([\w\d-_]+)\s*([\d\w-_\s]+)?(\d[\d>&\s]+)(.*)?/i', $c, $matches)) {
+            $cron_line_exp = '/(#?)(.*)cd.*php.*\.php\s+([\w\d-_]+)\s+([\w\d-_]+)\s*([\d\w-_\s]+)?(\d[\d>&\s]+)(.*)?/i';
+            if (preg_match($cron_line_exp, $c, $matches)) {
                 try {
                     CronExpression::factory($matches[2]);
                 } catch (\Exception $e) {
@@ -247,8 +285,9 @@ class TaskManager
                 $arguments = str_replace(' ', ',', trim($matches[5]));
                 $command = ucfirst($matches[3]) . '::' . $matches[4] . '(' . $arguments . ')';
                 $task->setCommand($command);
-                if (!empty($comment))
+                if (!empty($comment)) {
                     $task->setComment($comment);
+                }
                 $status = empty($matches[1]) ? TaskInterface::TASK_STATUS_ACTIVE : TaskInterface::TASK_STATUS_INACTIVE;
                 $task->setStatus($status);
                 $task->setTs(date('Y-m-d H:i:s'));
@@ -281,12 +320,33 @@ class TaskManager
     {
         $str = '';
         $comment = $task->getComment();
-        if (!empty($comment))
+        if (!empty($comment)) {
             $str .= '#' . $comment . PHP_EOL;
-        if (TaskInterface::TASK_STATUS_ACTIVE != $task->getStatus())
+        }
+        if (TaskInterface::TASK_STATUS_ACTIVE != $task->getStatus()) {
             $str .= '#';
+        }
         list($class, $method, $args) = self::parseCommand($task->getCommand());
         $str .= $task->getTime() . ' cd ' . $path . '; ' . $php_bin . ' ' . $input_file . ' ' . $class . ' ' . $method . ' ' . implode(' ', $args) . ' 2>&1 > /dev/null';
         return $str . PHP_EOL;
+    }
+
+    public static function setSetting($name, $value)
+    {
+        switch ($name) {
+            case self::SETTING_CLASS_FOLDERS:
+                if (is_array($value)) {
+                    self::$class_folders = $value;
+                } else {
+                    self::$class_folders = [$value];
+                }
+                break;
+            case self::SETTING_LOAD_CLASS:
+                self::$load_class = (bool)$value;
+                break;
+            default:
+                return false;
+        }
+        return true;
     }
 }

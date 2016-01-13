@@ -69,8 +69,9 @@ class TasksController extends BaseController
         } elseif (isset($_POST['custom_task'])) {
             $result = TaskManager::parseAndRunCommand($_POST['custom_task']);
             echo ($result) ? 'success' : 'failed';
-        } else
+        } else {
             echo 'empty task id';
+        }
     }
 
     public function getDates()
@@ -82,11 +83,12 @@ class TasksController extends BaseController
             return;
         }
         echo '<ul>';
-        foreach ($dates as $d)
+        foreach ($dates as $d) {
             /**
              * @var \DateTime $d
              */
             echo '<li>' . $d->format('Y-m-d H:i:s') . '</li>';
+        }
         echo '</ul>';
     }
 
@@ -99,16 +101,18 @@ class TasksController extends BaseController
              */
 
             echo htmlentities($run->getOutput());
-        } else
+        } else {
             echo 'empty task run id';
+        }
     }
 
     public function taskEdit()
     {
-        if (isset($_GET['task_id']))
+        if (isset($_GET['task_id'])) {
             $task = Task::find($_GET['task_id']);
-        else
+        } else {
             $task = new Task();
+        }
         /**
          * @var Task $task
          */
@@ -157,5 +161,4 @@ class TasksController extends BaseController
             'date_end' => $date_end,
         ]);
     }
-
 }

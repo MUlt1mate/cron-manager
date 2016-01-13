@@ -7,7 +7,6 @@
 
 namespace mult1mate\crontab;
 
-
 interface TaskRunInterface
 {
     const RUN_STATUS_STARTED = 'started';

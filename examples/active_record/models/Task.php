@@ -19,7 +19,7 @@ use mult1mate\crontab\TaskRunInterface;
  */
 class Task extends Model implements TaskInterface
 {
-    static $has_many = [
+    static public $has_many = [
         ['taskruns', 'class_name' => 'TaskRun']
     ];
 

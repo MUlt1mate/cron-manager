@@ -7,7 +7,6 @@
 
 namespace mult1mate\crontab;
 
-
 /**
  * Interface TaskInterface
  * @package mult1mate\crontab

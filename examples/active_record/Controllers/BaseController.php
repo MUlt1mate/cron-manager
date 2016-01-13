@@ -18,11 +18,12 @@ class BaseController
 
     protected function renderView($view, $params, $template = true)
     {
-        if ($template)
+        if ($template) {
             require_once '../views/template.php';
-        foreach ($params as $key => $value)
+        }
+        foreach ($params as $key => $value) {
             $$key = $value;
+        }
         require_once "../views/$view.php";
     }
-
 }

@@ -34,5 +34,4 @@ class ActiveController extends BaseController
         }
         return false;
     }
-
 }
