@@ -2,7 +2,7 @@
   "name": "mult1mate/cron-manager",
   "description": "Flexible cron tasks manager for MVC-type applications",
   "minimum-stability": "dev",
-  "keywords": ["cron","crontab","tasks manager","schedule"],
+  "keywords": ["cron","crontab","tasks manager","schedule","codeigniter"],
   "homepage": "https://cron.multimate.ru",
   "license": "MIT",
   "authors": [
