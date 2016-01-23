@@ -17,17 +17,17 @@ class TaskManager
 
     /**
      * @param TaskInterface $task
-     * @param string $time_expression
+     * @param string $time
      * @param string $command
      * @param string $status
      * @param string $comment
      * @return TaskInterface
      */
-    public static function editTask($task, $time_expression, $command, $status = TaskInterface::TASK_STATUS_ACTIVE, $comment = null)
+    public static function editTask($task, $time, $command, $status = TaskInterface::TASK_STATUS_ACTIVE, $comment = null)
     {
         $task->setStatus($status);
         $task->setCommand(self::validateCommand($command));
-        $task->setTime($time_expression);
+        $task->setTime($time);
         if (isset($comment)) {
             $task->setComment($comment);
         }
@@ -46,8 +46,8 @@ class TaskManager
     public static function validateCommand($command)
     {
         list($class, $method, $args) = self::parseCommand($command);
-        $args = array_map(function ($el) {
-            return trim($el);
+        $args = array_map(function ($elem) {
+            return trim($elem);
         }, $args);
         return $class . '::' . $method . '(' . trim(implode(',', $args), ',') . ')';
     }
@@ -176,10 +176,10 @@ class TaskManager
                 $f = rtrim($f, '/');
                 $filename = $f . '/' . $class_name . '.php';
                 if (file_exists($filename)) {
+                    require_once $filename;
                     if (class_exists($class_name)) {
-                        require_once $filename;
+                        return true;
                     }
-                    return true;
                 }
             }
         }
@@ -327,7 +327,8 @@ class TaskManager
             $str .= '#';
         }
         list($class, $method, $args) = self::parseCommand($task->getCommand());
-        $str .= $task->getTime() . ' cd ' . $path . '; ' . $php_bin . ' ' . $input_file . ' ' . $class . ' ' . $method . ' ' . implode(' ', $args) . ' 2>&1 > /dev/null';
+        $exec_cmd = $php_bin . ' ' . $input_file . ' ' . $class . ' ' . $method . ' ' . implode(' ', $args);
+        $str .= $task->getTime() . ' cd ' . $path . '; ' . $exec_cmd . ' 2>&1 > /dev/null';
         return $str . PHP_EOL;
     }
 
