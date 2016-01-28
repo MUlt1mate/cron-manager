@@ -11,7 +11,7 @@ use mult1mate\crontab\TaskManager;
  */
 class TasksController extends CI_Controller
 {
-    const CONTROLLERS_FOLDER = __DIR__ . '/../models';
+    private $controller_folder;
 
     public function __construct()
     {
@@ -20,22 +20,23 @@ class TasksController extends CI_Controller
         $this->load->model('DbBaseModel');
         $this->load->model('Task', 'task');
         $this->load->model('TaskRun', 'task_run');
+        $this->controller_folder = __DIR__ . '/../models';
 
-        TaskManager::set_setting(TaskManager::SETTING_LOAD_CLASS, true);
-        TaskManager::set_setting(TaskManager::SETTING_CLASS_FOLDERS, self::CONTROLLERS_FOLDER);
+        TaskManager::setSetting(TaskManager::SETTING_LOAD_CLASS, true);
+        TaskManager::setSetting(TaskManager::SETTING_CLASS_FOLDERS, $this->controller_folder);
     }
 
     public function index()
     {
-        $this->load->view('tasks/tasks_list', [
-            'tasks' => Task::findAll(['not_in' => ['status', TaskInterface::TASK_STATUS_DELETED]]),
-            'methods' => TaskManager::getAllMethods(self::CONTROLLERS_FOLDER),
-        ]);
+        $this->load->view('tasks/tasks_list', array(
+            'tasks' => Task::findAll(array('not_in' => array('status', TaskInterface::TASK_STATUS_DELETED))),
+            'methods' => TaskManager::getAllMethods($this->controller_folder),
+        ));
     }
 
     public function export()
     {
-        $this->load->view('tasks/export', []);
+        $this->load->view('tasks/export', array());
     }
 
     public function parseCrontab()
@@ -49,8 +50,8 @@ class TasksController extends CI_Controller
     public function exportTasks()
     {
         if (isset($_POST['folder'])) {
-            $tasks = Task::findAll(['in' => ['status', [TaskInterface::TASK_STATUS_ACTIVE, TaskInterface::TASK_STATUS_INACTIVE]]]);
-            $result = [];
+            $tasks = Task::findAll(array('in' => array('status', array(TaskInterface::TASK_STATUS_ACTIVE, TaskInterface::TASK_STATUS_INACTIVE))));
+            $result = array();
             foreach ($tasks as $t) {
                 $line = TaskManager::getTaskCrontabLine($t, $_POST['folder'], $_POST['php'], $_POST['file']);
                 $result[] = nl2br($line);
@@ -63,13 +64,13 @@ class TasksController extends CI_Controller
     {
         $task_id = isset($_GET['task_id']) ? $_GET['task_id'] : null;
         $runs = TaskRun::getLast($task_id);
-        $this->load->view('tasks/runs_list', ['runs' => $runs]);
+        $this->load->view('tasks/runs_list', array('runs' => $runs));
     }
 
     public function runTask()
     {
         if (isset($_POST['task_id'])) {
-            $tasks = !is_array($_POST['task_id']) ? [$_POST['task_id']] : $_POST['task_id'];
+            $tasks = !is_array($_POST['task_id']) ? array($_POST['task_id']) : $_POST['task_id'];
             foreach ($tasks as $t) {
                 $task = Task::findByPk($t);
                 /**
@@ -134,25 +135,25 @@ class TasksController extends CI_Controller
             $task = TaskManager::editTask($task, $_POST['time'], $_POST['command'], $_POST['status'], $_POST['comment']);
         }
 
-        $this->load->view('tasks/task_edit', [
+        $this->load->view('tasks/task_edit', array(
             'task' => $task,
-            'methods' => TaskManager::getAllMethods(self::CONTROLLERS_FOLDER),
-        ]);
+            'methods' => TaskManager::getAllMethods($this->controller_folder),
+        ));
     }
 
     public function tasksUpdate()
     {
         if (isset($_POST['task_id'])) {
-            $tasks = Task::findAll(['in' => ['task_id', $_POST['task_id']]]);
+            $tasks = Task::findAll(array('in' => array('task_id', $_POST['task_id'])));
             foreach ($tasks as $t) {
                 /**
                  * @var Task $t
                  */
-                $action_status = [
+                $action_status = array(
                     'Enable' => TaskInterface::TASK_STATUS_ACTIVE,
                     'Disable' => TaskInterface::TASK_STATUS_INACTIVE,
                     'Delete' => TaskInterface::TASK_STATUS_DELETED,
-                ];
+                );
                 $t->setStatus($action_status[$_POST['action']]);
                 $t->taskSave();
             }
@@ -169,10 +170,10 @@ class TasksController extends CI_Controller
         $date_begin = isset($_GET['date_begin']) ? $_GET['date_begin'] : date('Y-m-d', strtotime('-6 day'));
         $date_end = isset($_GET['date_end']) ? $_GET['date_end'] : date('Y-m-d');
 
-        $this->load->view('tasks/report', [
+        $this->load->view('tasks/report', array(
             'report' => Task::getReport($date_begin, $date_end),
             'date_begin' => $date_begin,
             'date_end' => $date_end,
-        ]);
+        ));
     }
 }

@@ -23,7 +23,7 @@ class Task extends DbBaseModel implements TaskInterface
 
     public function attributes()
     {
-        return ['task_id', 'time', 'command', 'status', 'comment', 'ts', 'ts_updated'];
+        return array('task_id', 'time', 'command', 'status', 'comment', 'ts', 'ts_updated');
     }
 
     public static function taskGet($task_id)
@@ -38,7 +38,7 @@ class Task extends DbBaseModel implements TaskInterface
 
     public static function getReport($date_begin, $date_end)
     {
-        return self::getDb()->query(DbHelper::getReportSql(), [$date_begin, $date_end])->result();
+        return self::getDb()->query(DbHelper::getReportSql(), array($date_begin, $date_end))->result();
     }
 
     public function taskDelete()

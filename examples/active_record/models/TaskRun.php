@@ -16,15 +16,15 @@ use mult1mate\crontab\TaskRunInterface;
  */
 class TaskRun extends Model implements TaskRunInterface
 {
-    static public $belongs_to = [
-        ['task']
-    ];
+    static public $belongs_to = array(
+        array('task')
+    );
 
     public static function getLast($task_id = null, $count = 100)
     {
-        $conditions = ['order' => 'task_run_id desc', 'include' => ['task'], 'limit' => $count];
+        $conditions = array('order' => 'task_run_id desc', 'include' => array('task'), 'limit' => $count);
         if ($task_id) {
-            $conditions['conditions'] = ['task_id' => $task_id];
+            $conditions['conditions'] = array('task_id' => $task_id);
         }
 
         return self::find('all', $conditions);

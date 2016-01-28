@@ -13,15 +13,15 @@ class TasksController extends BaseController
 
     public function index()
     {
-        $this->renderView('tasks_list', [
+        $this->renderView('tasks_list', array(
             'tasks' => Task::getList(),
             'methods' => TaskManager::getAllMethods(self::CONTROLLERS_FOLDER),
-        ]);
+        ));
     }
 
     public function export()
     {
-        $this->renderView('export', []);
+        $this->renderView('export', array());
     }
 
     public function parseCrontab()
@@ -36,7 +36,7 @@ class TasksController extends BaseController
     {
         if (isset($_POST['folder'])) {
             $tasks = Task::getList();
-            $result = [];
+            $result = array();
             foreach ($tasks as $t) {
                 $line = TaskManager::getTaskCrontabLine($t, $_POST['folder'], $_POST['php'], $_POST['file']);
                 $result[] = nl2br($line);
@@ -49,13 +49,13 @@ class TasksController extends BaseController
     {
         $task_id = isset($_GET['task_id']) ? $_GET['task_id'] : null;
         $runs = TaskRun::getLast($task_id);
-        $this->renderView('runs_list', ['runs' => $runs]);
+        $this->renderView('runs_list', array('runs' => $runs));
     }
 
     public function runTask()
     {
         if (isset($_POST['task_id'])) {
-            $tasks = !is_array($_POST['task_id']) ? [$_POST['task_id']] : $_POST['task_id'];
+            $tasks = !is_array($_POST['task_id']) ? array($_POST['task_id']) : $_POST['task_id'];
             foreach ($tasks as $t) {
                 $task = Task::find($t);
                 /**
@@ -120,10 +120,10 @@ class TasksController extends BaseController
             $task = TaskManager::editTask($task, $_POST['time'], $_POST['command'], $_POST['status'], $_POST['comment']);
         }
 
-        $this->renderView('task_edit', [
+        $this->renderView('task_edit', array(
             'task' => $task,
             'methods' => TaskManager::getAllMethods(self::CONTROLLERS_FOLDER),
-        ]);
+        ));
     }
 
     public function tasksUpdate()
@@ -134,11 +134,11 @@ class TasksController extends BaseController
                 /**
                  * @var Task $t
                  */
-                $action_status = [
+                $action_status = array(
                     'Enable' => TaskInterface::TASK_STATUS_ACTIVE,
                     'Disable' => TaskInterface::TASK_STATUS_INACTIVE,
                     'Delete' => TaskInterface::TASK_STATUS_DELETED,
-                ];
+                );
                 $t->setStatus($action_status[$_POST['action']]);
                 $t->save();
             }
@@ -155,10 +155,10 @@ class TasksController extends BaseController
         $date_begin = isset($_GET['date_begin']) ? $_GET['date_begin'] : date('Y-m-d', strtotime('-6 day'));
         $date_end = isset($_GET['date_end']) ? $_GET['date_end'] : date('Y-m-d');
 
-        $this->renderView('report', [
+        $this->renderView('report', array(
             'report' => Task::getReport($date_begin, $date_end),
             'date_begin' => $date_begin,
             'date_end' => $date_end,
-        ]);
+        ));
     }
 }

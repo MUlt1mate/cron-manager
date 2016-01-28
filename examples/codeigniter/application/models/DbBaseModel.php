@@ -6,8 +6,8 @@
 class DbBaseModel extends CI_Model
 {
     private $new_record = false; // whether this instance is new or not
-    private $attributes = []; // attribute name => attribute value
-    private $errors = [];
+    private $attributes = array(); // attribute name => attribute value
+    private $errors = array();
 
     public static $table_name;
     public static $primary_key;
@@ -42,10 +42,10 @@ class DbBaseModel extends CI_Model
 
     public function attributes()
     {
-        return [];
+        return array();
     }
 
-    public static function findOne($condition = [])
+    public static function findOne($condition = array())
     {
         $query = self::query($condition)->get();
         if ($query->num_rows() > 0) {
@@ -67,12 +67,12 @@ class DbBaseModel extends CI_Model
      */
     public static function findByPk($value)
     {
-        return self::findOne(['where' => [static::$primary_key => $value]]);
+        return self::findOne(array('where' => array(static::$primary_key => $value)));
     }
 
-    public static function findAll($condition = [])
+    public static function findAll($condition = array())
     {
-        $found = [];
+        $found = array();
         $query = self::query($condition)->get();
 
         if ($query->num_rows() > 0) {
@@ -93,7 +93,7 @@ class DbBaseModel extends CI_Model
 
     public static function findAllBySql($sql, $binds = null)
     {
-        $found = [];
+        $found = array();
         $ci =& get_instance();
         $query = $ci->db->query($sql, $binds);
 
@@ -120,7 +120,7 @@ class DbBaseModel extends CI_Model
 
         if (!array_key_exists('where', $condition)) {
             $found = false;
-            foreach (['select', 'order', 'limit', 'like', 'in', 'not_in'] as $key) {
+            foreach (array('select', 'order', 'limit', 'like', 'in', 'not_in') as $key) {
                 if (array_key_exists($key, $condition)) {
                     $found = true;
                     break;
@@ -128,7 +128,7 @@ class DbBaseModel extends CI_Model
             }
 
             if (!$found) {
-                $condition = ['where' => $condition];
+                $condition = array('where' => $condition);
             }
         }
 
@@ -204,7 +204,7 @@ class DbBaseModel extends CI_Model
 
     public function getAttributes()
     {
-        $data = [];
+        $data = array();
         foreach ($this->attributes() as $name) {
             $data[$name] = $this->getAttribute($name);
         }
@@ -256,7 +256,7 @@ class DbBaseModel extends CI_Model
         $update = $this->attributes;
         $key = static::$primary_key;
         unset($update[$key]);
-        return (bool)$this->db->where([$key => $this->$key])->update(static::$table_name, $update);
+        return (bool)$this->db->where(array($key => $this->$key))->update(static::$table_name, $update);
     }
 
     protected function beforeSave()

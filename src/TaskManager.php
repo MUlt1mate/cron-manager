@@ -13,7 +13,7 @@ class TaskManager
     const SETTING_LOAD_CLASS = 'load_class';
     const SETTING_CLASS_FOLDERS = 'class_folders';
     protected static $load_class = false;
-    protected static $class_folders = [];
+    protected static $class_folders = array();
 
     /**
      * @param TaskInterface $task
@@ -87,7 +87,7 @@ class TaskManager
             $cron = CronExpression::factory($time);
             $dates = $cron->getMultipleRunDates($count);
         } catch (\Exception $e) {
-            return [];
+            return array();
         }
         return $dates;
     }
@@ -143,7 +143,7 @@ class TaskManager
                 throw new CrontabManagerException('method ' . $method . ' not found in class ' . $class);
             }
 
-            $result = call_user_func_array([$obj, $method], $args);
+            $result = call_user_func_array(array($obj, $method), $args);
         } catch (\Exception $e) {
             echo 'Caught an exception: ' . get_class($e) . ': ' . PHP_EOL . $e->getMessage() . PHP_EOL;
             return false;
@@ -159,11 +159,11 @@ class TaskManager
     protected static function parseCommand($command)
     {
         if (preg_match('/(\w+)::(\w+)\((.*)\)/', $command, $match)) {
-            return [
+            return array(
                 $match[1],
                 $match[2],
                 explode(',', $match[3])
-            ];
+            );
         } else {
             throw new CrontabManagerException('Command not recognized');
         }
@@ -216,7 +216,7 @@ class TaskManager
      */
     protected static function getControllersList($paths)
     {
-        $controllers = [];
+        $controllers = array();
         foreach ($paths as $p) {
             if (!file_exists($p)) {
                 throw new CrontabManagerException('folder ' . $p . ' does not exist');
@@ -240,9 +240,9 @@ class TaskManager
     public static function getAllMethods($folder)
     {
         if (!is_array($folder)) {
-            $folder = [$folder];
+            $folder = array($folder);
         }
-        $methods = [];
+        $methods = array();
         $controllers = self::getControllersList($folder);
         foreach ($controllers as $c) {
             if (!class_exists($c)) {
@@ -263,13 +263,13 @@ class TaskManager
     {
         $cron_array = explode(PHP_EOL, $cron);
         $comment = null;
-        $result = [];
+        $result = array();
         foreach ($cron_array as $c) {
             $c = trim($c);
             if (empty($c)) {
                 continue;
             }
-            $r = [];
+            $r = array();
             $r[] = $c;
             $cron_line_exp = '/(#?)(.*)cd.*php.*\.php\s+([\w\d-_]+)\s+([\w\d-_]+)\s*([\d\w-_\s]+)?(\d[\d>&\s]+)(.*)?/i';
             if (preg_match($cron_line_exp, $c, $matches)) {
@@ -339,7 +339,7 @@ class TaskManager
                 if (is_array($value)) {
                     self::$class_folders = $value;
                 } else {
-                    self::$class_folders = [$value];
+                    self::$class_folders = array($value);
                 }
                 break;
             case self::SETTING_LOAD_CLASS:

@@ -20,7 +20,7 @@ class TaskRun extends DbBaseModel implements TaskRunInterface
 
     public function attributes()
     {
-        return ['task_run_id', 'task_id', 'status', 'output', 'execution_time', 'ts'];
+        return array('task_run_id', 'task_id', 'status', 'output', 'execution_time', 'ts');
     }
 
     public static function getLast($task_id = null, $count = 100)

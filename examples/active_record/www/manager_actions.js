@@ -1,10 +1,11 @@
 $(function () {
+    var controller_url = '';
     //tasks list page
     $('.run_task').click(function () {
         if (confirm('Are you sure?')) {
             $('#output_section').show();
             $('#task_output_container').text('Running...');
-            $.post('?m=runTask', {task_id: $(this).attr('href')}, function (data) {
+            $.post(controller_url + '?m=runTask', {task_id: $(this).attr('href')}, function (data) {
                 $('#task_output_container').html(data);
             })
         }
@@ -25,19 +26,19 @@ $(function () {
             if (confirm('Are you sure?')) {
                 $('#output_section').show();
                 $('#task_output_container').text('Running...');
-                $.post('?m=runTask', {task_id: tasks}, function (data) {
+                $.post(controller_url + '?m=runTask', {task_id: tasks}, function (data) {
                     $('#task_output_container').html(data);
                 })
             }
         } else {
-            $.post('?m=tasksUpdate', {task_id: tasks, action: action}, function () {
+            $.post(controller_url + '?m=tasksUpdate', {task_id: tasks, action: action}, function () {
                 window.location.reload();
             });
         }
         return false;
     });
     $('.show_output').click(function () {
-        $.post('?m=getOutput', {task_run_id: $(this).attr('href')}, function (data) {
+        $.post(controller_url + '?m=getOutput', {task_run_id: $(this).attr('href')}, function (data) {
             $('#output_container').html(data);
             return false;
         })
@@ -46,7 +47,7 @@ $(function () {
         if (confirm('Are you sure?')) {
             $('#output_section').show();
             $('#task_output_container').text('Running...');
-            $.post('?m=runTask', {custom_task: $('#command').val()}, function (data) {
+            $.post(controller_url + '?m=runTask', {custom_task: $('#command').val()}, function (data) {
                 $('#task_output_container').html(data);
             })
         }
@@ -59,7 +60,7 @@ $(function () {
     });
 
     function getRunDates() {
-        $.post('?m=getDates', {time: $('#time').val()}, function (data) {
+        $.post(controller_url + '?m=getDates', {time: $('#time').val()}, function (data) {
             $('#dates_list').html(data);
         })
     }
@@ -78,7 +79,7 @@ $(function () {
 
     //export page
     $('#parse_crontab_form').submit(function () {
-        $.post('?m=parseCrontab', $(this).serialize(), function (data) {
+        $.post(controller_url + '?m=parseCrontab', $(this).serialize(), function (data) {
             var list = '';
             data.forEach(function (element) {
                 element.forEach(function (el) {
@@ -91,7 +92,7 @@ $(function () {
         return false;
     });
     $('#export_form').submit(function () {
-        $.post('?m=exportTasks', $(this).serialize(), function (data) {
+        $.post(controller_url + '?m=exportTasks', $(this).serialize(), function (data) {
             var list = '';
             data.forEach(function (element) {
                 list += '' + element + '<br>';

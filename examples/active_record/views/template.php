@@ -4,13 +4,13 @@
  * Date: 21.12.15
  * Time: 0:29
  */
-$menu = [
+$menu = array(
     'index' => 'Tasks list',
     'taskEdit' => 'Add new/edit task',
     'taskLog' => 'Logs',
     'export' => 'Import/Export',
     'tasksReport' => 'Report',
-];
+);
 ?>
 <head>
     <title>Cron tasks manager</title>

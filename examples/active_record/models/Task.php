@@ -19,9 +19,9 @@ use mult1mate\crontab\TaskRunInterface;
  */
 class Task extends Model implements TaskInterface
 {
-    static public $has_many = [
-        ['taskruns', 'class_name' => 'TaskRun']
-    ];
+    static public $has_many = array(
+        array('taskruns', 'class_name' => 'TaskRun')
+    );
 
     public static function taskGet($task_id)
     {
@@ -30,10 +30,10 @@ class Task extends Model implements TaskInterface
 
     public static function getList()
     {
-        return self::find('all', [
-            'conditions' => ['status in (?)', [TaskInterface::TASK_STATUS_ACTIVE, TaskInterface::TASK_STATUS_INACTIVE]],
+        return self::find('all', array(
+            'conditions' => array('status in (?)', array(TaskInterface::TASK_STATUS_ACTIVE, TaskInterface::TASK_STATUS_INACTIVE)),
             'order' => 'status, task_id desc',
-        ]);
+        ));
     }
 
     public static function getAll()
@@ -43,7 +43,7 @@ class Task extends Model implements TaskInterface
 
     public static function getReport($date_begin, $date_end)
     {
-        return self::query(DbHelper::getReportSql(), [$date_begin, $date_end])->fetchAll();
+        return self::query(DbHelper::getReportSql(), array($date_begin, $date_end))->fetchAll();
     }
 
     public function taskDelete()
