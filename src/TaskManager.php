@@ -26,7 +26,10 @@ class TaskManager
     public static function editTask($task, $time, $command, $status = TaskInterface::TASK_STATUS_ACTIVE, $comment = null)
     {
         $task->setStatus($status);
-        $task->setCommand(self::validateCommand($command));
+        if (!$validated_command = self::validateCommand($command)) {
+            return $task;
+        }
+        $task->setCommand($validated_command);
         $task->setTime($time);
         if (isset($comment)) {
             $task->setComment($comment);
@@ -39,13 +42,17 @@ class TaskManager
     }
 
     /**
+     * Checks if the command is correct and removes spaces
      * @param string $command
-     * @return string
-     * @throws CrontabManagerException
+     * @return string|false
      */
     public static function validateCommand($command)
     {
-        list($class, $method, $args) = self::parseCommand($command);
+        try {
+            list($class, $method, $args) = self::parseCommand($command);
+        } catch (TaskManagerException $e) {
+            return false;
+        }
         $args = array_map(function ($elem) {
             return trim($elem);
         }, $args);
@@ -140,7 +147,7 @@ class TaskManager
 
             $obj = new $class();
             if (!method_exists($obj, $method)) {
-                throw new CrontabManagerException('method ' . $method . ' not found in class ' . $class);
+                throw new TaskManagerException('method ' . $method . ' not found in class ' . $class);
             }
 
             $result = call_user_func_array(array($obj, $method), $args);
@@ -154,7 +161,7 @@ class TaskManager
     /**
      * @param string $command
      * @return array
-     * @throws CrontabManagerException
+     * @throws TaskManagerException
      */
     protected static function parseCommand($command)
     {
@@ -165,7 +172,7 @@ class TaskManager
                 explode(',', $match[3])
             );
         } else {
-            throw new CrontabManagerException('Command not recognized');
+            throw new TaskManagerException('Command not recognized');
         }
     }
 
@@ -184,19 +191,19 @@ class TaskManager
             }
         }
 
-        throw new CrontabManagerException('class ' . $class_name . ' not found');
+        throw new TaskManagerException('class ' . $class_name . ' not found');
     }
 
     /**
      * Returns all public methods for class
      * @param string $class
      * @return array
-     * @throws CrontabManagerException
+     * @throws TaskManagerException
      */
     public static function getControllerMethods($class)
     {
         if (!class_exists($class)) {
-            throw new CrontabManagerException('class ' . $class . ' not found');
+            throw new TaskManagerException('class ' . $class . ' not found');
         }
         $class_methods = get_class_methods($class);
         if ($parent_class = get_parent_class($class)) {
@@ -212,14 +219,14 @@ class TaskManager
      * Returns names of all php files in directories
      * @param array $paths
      * @return array
-     * @throws CrontabManagerException
+     * @throws TaskManagerException
      */
     protected static function getControllersList($paths)
     {
         $controllers = array();
         foreach ($paths as $p) {
             if (!file_exists($p)) {
-                throw new CrontabManagerException('folder ' . $p . ' does not exist');
+                throw new TaskManagerException('folder ' . $p . ' does not exist');
             }
             $files = scandir($p);
             foreach ($files as $f) {
@@ -235,7 +242,7 @@ class TaskManager
      * Scan folders for classes and return all their public methods
      * @param string|array $folder
      * @return array
-     * @throws CrontabManagerException
+     * @throws TaskManagerException
      */
     public static function getAllMethods($folder)
     {

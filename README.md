@@ -33,7 +33,7 @@ composer require mult1mate/cron-manager
 
 ### Requirements
 
-* PHP 5.4 or above
+* PHP 5.3 or above
 * [mtdowling/cron-expression](https://github.com/mtdowling/cron-expression)
 
 ### Configure

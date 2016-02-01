@@ -7,7 +7,7 @@
 
 namespace mult1mate\crontab;
 
-class CrontabManagerException extends \Exception
+class TaskManagerException extends \Exception
 {
 
 }
