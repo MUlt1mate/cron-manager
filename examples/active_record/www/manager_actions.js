@@ -2,13 +2,7 @@ $(function () {
     var controller_url = '';
     //tasks list page
     $('.run_task').click(function () {
-        if (confirm('Are you sure?')) {
-            $('#output_section').show();
-            $('#task_output_container').text('Running...');
-            $.post(controller_url + '?m=runTask', {task_id: $(this).attr('href')}, function (data) {
-                $('#task_output_container').html(data);
-            })
-        }
+        run_task({task_id: $(this).attr('href')});
         return false;
     });
     $('#select_all').change(function () {
@@ -23,13 +17,7 @@ $(function () {
             return $(this).val();
         }).get();
         if ('Run' == action) {
-            if (confirm('Are you sure?')) {
-                $('#output_section').show();
-                $('#task_output_container').text('Running...');
-                $.post(controller_url + '?m=runTask', {task_id: tasks}, function (data) {
-                    $('#task_output_container').html(data);
-                })
-            }
+            run_task({task_id: tasks});
         } else {
             $.post(controller_url + '?m=tasksUpdate', {task_id: tasks, action: action}, function () {
                 window.location.reload();
@@ -44,15 +32,21 @@ $(function () {
         })
     });
     $('#run_custom_task').click(function () {
+        run_task({custom_task: $('#command').val()});
+        return false;
+    });
+
+    function run_task(data) {
         if (confirm('Are you sure?')) {
             $('#output_section').show();
             $('#task_output_container').text('Running...');
-            $.post(controller_url + '?m=runTask', {custom_task: $('#command').val()}, function (data) {
+            $.post(controller_url + '?m=runTask', data, function (data) {
                 $('#task_output_container').html(data);
-            })
+            }).fail(function () {
+                alert('Server error has occurred');
+            });
         }
-        return false;
-    });
+    }
 
     //edit page
     $('#method').change(function () {

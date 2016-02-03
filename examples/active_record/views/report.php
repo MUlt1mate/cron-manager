@@ -25,6 +25,7 @@
 <table class="table">
     <tr>
         <th>Task</th>
+        <th>Avg. time</th>
         <th>Success</th>
         <th>Started</th>
         <th>Error</th>
@@ -33,6 +34,7 @@
     <?php foreach ($report as $r): ?>
         <tr>
             <td><?= $r['command'] ?></td>
+            <td><?= $r['time_avg'] ?></td>
             <td><?= $r['completed'] ?></td>
             <td><?= $r['started'] ?></td>
             <td><?= $r['error'] ?></td>
