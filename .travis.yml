@@ -9,4 +9,4 @@ php:
 
 install: composer update
 
-script: phpunit -c tests/phpunit.xml
+script: phpunit -c tests/phpunit.xml --bootstrap ../vendor/autoload.php -v
