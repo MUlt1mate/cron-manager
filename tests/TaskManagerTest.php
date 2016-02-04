@@ -10,7 +10,7 @@ class TaskManagerTest extends PHPUnit_Framework_TestCase
 {
     public function testValidateCommand()
     {
-        require_once __DIR__ . '/../vendor/autoload.php';
+//        require_once __DIR__ . '/../vendor/autoload.php';
         $result = TaskManager::validateCommand('Class::method( arg1 , arg2 ) ');
         $this->assertEquals($result, 'Class::method(arg1,arg2)');
 
