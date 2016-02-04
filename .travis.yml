@@ -10,3 +10,10 @@ php:
 install: composer update --no-dev --no-interaction
 
 script: phpunit
+
+addons:
+    code_climate:
+        repo_token: 6f2d5e4aa8c190542beb482ac6c1c1cc9b2f896c9d3c64c02e2bd2ec3f5757eb
+
+after_script:
+  - vendor/bin/test-reporter
