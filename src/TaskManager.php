@@ -165,7 +165,7 @@ class TaskManager
      */
     protected static function parseCommand($command)
     {
-        if (preg_match('/(\w+)::(\w+)\((.*)\)/', $command, $match)) {
+        if (preg_match('/([\w\\\\]+)::(\w+)\((.*)\)/', $command, $match)) {
             return array(
                 $match[1],
                 $match[2],
@@ -218,20 +218,22 @@ class TaskManager
     /**
      * Returns names of all php files in directories
      * @param array $paths
+     * @param $namespaces_list
      * @return array
      * @throws TaskManagerException
      */
-    protected static function getControllersList($paths)
+    protected static function getControllersList($paths, $namespaces_list)
     {
         $controllers = array();
-        foreach ($paths as $p) {
+        foreach ($paths as $p_index => $p) {
             if (!file_exists($p)) {
                 throw new TaskManagerException('folder ' . $p . ' does not exist');
             }
             $files = scandir($p);
             foreach ($files as $f) {
                 if (preg_match('/^([A-Z]\w+)\.php$/', $f, $match)) {
-                    $controllers[] = $match[1];
+                    $namespace = isset($namespaces_list[$p_index]) ? $namespaces_list[$p_index] : '';
+                    $controllers[] = $namespace . $match[1];
                 }
             }
         }
@@ -241,16 +243,17 @@ class TaskManager
     /**
      * Scan folders for classes and return all their public methods
      * @param string|array $folder
+     * @param string|array $namespace
      * @return array
      * @throws TaskManagerException
      */
-    public static function getAllMethods($folder)
+    public static function getAllMethods($folder, $namespace = array())
     {
-        if (!is_array($folder)) {
-            $folder = array($folder);
-        }
+        $folders_list = is_array($folder) ? $folder : array($folder);
+        $namespaces_list = is_array($namespace) ? $namespace : array($namespace);
         $methods = array();
-        $controllers = self::getControllersList($folder);
+
+        $controllers = self::getControllersList($folders_list, $namespaces_list);
         foreach ($controllers as $c) {
             if (!class_exists($c)) {
                 self::loadController($c);
