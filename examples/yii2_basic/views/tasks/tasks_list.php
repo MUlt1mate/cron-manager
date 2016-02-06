@@ -6,7 +6,7 @@
  * @var array $tasks
  * @var array $methods
  */
-$this->load->view('tasks/template');
+echo $this->render('tasks_template');
 ?>
 <table class="table table-bordered">
     <tr>
@@ -27,7 +27,7 @@ $this->load->view('tasks/template');
     <?php
     foreach ($tasks as $t):
         /**
-         * @var Task $t
+         * @var \app\models\Task $t
          */
         $status_class = (\mult1mate\crontab\TaskInterface::TASK_STATUS_ACTIVE == $t->status) ? '' : 'text-danger';
         ?>
@@ -43,10 +43,10 @@ $this->load->view('tasks/template');
             <td><?= $t->ts ?></td>
             <td><?= $t->ts_updated ?></td>
             <td>
-                <a href="/TasksController/taskEdit?task_id=<?= $t->task_id ?>">Edit</a>
+                <a href="?r=tasks/task-edit&task_id=<?= $t->task_id ?>">Edit</a>
             </td>
             <td>
-                <a href="/TasksController/taskLog?task_id=<?= $t->task_id ?>">Log</a>
+                <a href="?r=tasks/task-log&task_id=<?= $t->task_id ?>">Log</a>
             </td>
             <td>
                 <a href="<?= $t->task_id ?>" class="run_task">Run</a>

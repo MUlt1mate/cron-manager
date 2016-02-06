@@ -1,6 +1,6 @@
 <?php
 /**
- * User: mult1mate
+ * @author mult1mate
  * Date: 21.12.15
  * Time: 0:38
  * @var array $tasks

@@ -1,6 +1,9 @@
 <?php
-use ActiveRecord\Model;
+namespace app\models;
+
 use mult1mate\crontab\TaskRunInterface;
+use yii\db\ActiveRecord;
+use yii\db\Query;
 
 /**
  * @author mult1mate
@@ -11,23 +14,28 @@ use mult1mate\crontab\TaskRunInterface;
  * @property string $status
  * @property string $output
  * @property int $execution_time
- * @property Task $task
- * @property \ActiveRecord\DateTime $ts
+ * @property string $ts
  */
-class TaskRun extends Model implements TaskRunInterface
+class TaskRun extends ActiveRecord implements TaskRunInterface
 {
-    static public $belongs_to = array(
-        array('task')
-    );
+    public static function tableName()
+    {
+        return 'task_runs';
+    }
 
     public static function getLast($task_id = null, $count = 100)
     {
-        $conditions = array('order' => 'task_run_id desc', 'include' => array('task'), 'limit' => $count);
+        $db = (new Query())
+            ->select('task_runs.*, tasks.command')
+            ->from(self::tableName())
+            ->join('LEFT JOIN', 'tasks', 'tasks.task_id = task_runs.task_id')
+            ->orderBy('task_runs.task_run_id desc')
+            ->limit($count);
         if ($task_id) {
-            $conditions['conditions'] = array('task_id' => $task_id);
+            $db->where('task_runs.task_id=:task_id', array(':task_id' => $task_id));
         }
 
-        return self::find('all', $conditions);
+        return $db->all();
     }
 
     public function saveTaskRun()

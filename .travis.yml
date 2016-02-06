@@ -9,7 +9,7 @@ php:
 
 install: composer update --no-dev --no-interaction
 
-script: phpunit
+script: phpunit --coverage-text
 
 addons:
     code_climate:

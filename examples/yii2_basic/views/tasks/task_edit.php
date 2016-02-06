@@ -6,6 +6,7 @@
  * @var Task $task
  * @var array $methods
  */
+echo $this->render('tasks_template');
 ?>
 <form method="post">
     <div class="col-lg-6">
@@ -43,6 +44,8 @@
             <input type="hidden" name="task_id" value="<?= $task->task_id ?>">
         <?php endif; ?>
 
+        <input type="hidden" name="<?= \Yii::$app->request->csrfParam; ?>"
+               value="<?= Yii::$app->request->csrfToken; ?>"/>
         <button type="submit" class="btn btn-primary">Save</button>
 
     </div>

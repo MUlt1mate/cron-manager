@@ -7,7 +7,7 @@
  * @var string $date_end
  * @var array $report
  */
-$this->load->view('tasks/template');
+echo $this->render('tasks_template');
 ?>
 <form class="form-inline" action="">
     <div class="form-group">
@@ -19,9 +19,10 @@ $this->load->view('tasks/template');
         <input type="date" value="<?= $date_end ?>" name="date_end" id="date_end" class="form-control">
     </div>
     <div class="form-group">
-        <input type="hidden" value="tasksReport" name="m">
+        <input type="hidden" value="tasksReport" name="r">
         <input type="submit" value="Update" class="btn btn-primary">
     </div>
+
 </form>
 <table class="table">
     <tr>
@@ -34,12 +35,12 @@ $this->load->view('tasks/template');
     </tr>
     <?php foreach ($report as $r): ?>
         <tr>
-            <td><?= $r->command ?></td>
-            <td><?= $r->time_avg ?></td>
-            <td><?= $r->completed ?></td>
-            <td><?= $r->started ?></td>
-            <td><?= $r->error ?></td>
-            <th><?= $r->runs ?></th>
+            <td><?= $r['command'] ?></td>
+            <td><?= $r['time_avg'] ?></td>
+            <td><?= $r['completed'] ?></td>
+            <td><?= $r['started'] ?></td>
+            <td><?= $r['error'] ?></td>
+            <th><?= $r['runs'] ?></th>
         </tr>
     <?php endforeach; ?>
 </table>

@@ -2,7 +2,7 @@
 use mult1mate\crontab\TaskInterface;
 
 /**
- * User: mult1mate
+ * @author mult1mate
  * Date: 01.02.16
  * Time: 10:07
  */

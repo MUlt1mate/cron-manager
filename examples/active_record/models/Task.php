@@ -5,7 +5,7 @@ use mult1mate\crontab\TaskInterface;
 use mult1mate\crontab\TaskRunInterface;
 
 /**
- * User: mult1mate
+ * @author mult1mate
  * Date: 20.12.15
  * Time: 20:54
  * @property int $task_id

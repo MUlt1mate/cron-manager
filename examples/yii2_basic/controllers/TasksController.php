@@ -1,30 +1,46 @@
 <?php
+namespace app\controllers;
+
+use app\assets\TasksAsset;
+use app\models\Task;
+use app\models\TaskRun;
 use mult1mate\crontab\TaskInterface;
 use mult1mate\crontab\TaskManager;
+use yii\web\Controller;
 
 /**
  * @author mult1mate
  * Date: 20.12.15
  * Time: 20:56
  */
-class TasksController extends BaseController
+class TasksController extends Controller
 {
-    const CONTROLLERS_FOLDER = __DIR__;
+    private static $tasks_controllers_folder;
+    private static $tasks_namespace;
 
-    public function index()
+    public function __construct($id, $module, $config = [])
     {
-        $this->renderView('tasks_list', array(
+        parent::__construct($id, $module, $config);
+        self::$tasks_controllers_folder = __DIR__ . '/../models/';
+        self::$tasks_namespace = 'app\\models\\';
+        TasksAsset::register($this->view);
+    }
+
+    public function actionIndex()
+    {
+        return $this->render('tasks_list', array(
             'tasks' => Task::getList(),
-            'methods' => TaskManager::getAllMethods(self::CONTROLLERS_FOLDER),
+            'methods' => TaskManager::getAllMethods(self::$tasks_controllers_folder, self::$tasks_namespace),
         ));
     }
 
-    public function export()
+
+    public function actionExport()
     {
-        $this->renderView('export', array());
+        return $this->render('export', array());
     }
 
-    public function parseCrontab()
+    public function actionParseCrontab()
     {
         if (isset($_POST['crontab'])) {
             $result = TaskManager::parseCrontab($_POST['crontab'], new Task());
@@ -32,7 +48,7 @@ class TasksController extends BaseController
         }
     }
 
-    public function exportTasks()
+    public function actionExportTasks()
     {
         if (isset($_POST['folder'])) {
             $tasks = Task::getList();
@@ -45,19 +61,19 @@ class TasksController extends BaseController
         }
     }
 
-    public function taskLog()
+    public function actionTaskLog()
     {
         $task_id = isset($_GET['task_id']) ? $_GET['task_id'] : null;
         $runs = TaskRun::getLast($task_id);
-        $this->renderView('runs_list', array('runs' => $runs));
+        return $this->render('runs_list', array('runs' => $runs));
     }
 
-    public function runTask()
+    public function actionRunTask()
     {
         if (isset($_POST['task_id'])) {
             $tasks = !is_array($_POST['task_id']) ? array($_POST['task_id']) : $_POST['task_id'];
             foreach ($tasks as $t) {
-                $task = Task::find($t);
+                $task = Task::findOne($t);
                 /**
                  * @var Task $task
                  */
@@ -74,7 +90,7 @@ class TasksController extends BaseController
         }
     }
 
-    public function getDates()
+    public function actionGetDates()
     {
         $time = $_POST['time'];
         $dates = TaskManager::getRunDates($time);
@@ -92,10 +108,10 @@ class TasksController extends BaseController
         echo '</ul>';
     }
 
-    public function getOutput()
+    public function actionGetOutput()
     {
         if (isset($_POST['task_run_id'])) {
-            $run = TaskRun::find($_POST['task_run_id']);
+            $run = TaskRun::findOne($_POST['task_run_id']);
             /**
              * @var TaskRun $run
              */
@@ -106,10 +122,10 @@ class TasksController extends BaseController
         }
     }
 
-    public function taskEdit()
+    public function actionTaskEdit()
     {
         if (isset($_GET['task_id'])) {
-            $task = Task::find($_GET['task_id']);
+            $task = Task::findOne($_GET['task_id']);
         } else {
             $task = new Task();
         }
@@ -120,16 +136,16 @@ class TasksController extends BaseController
             $task = TaskManager::editTask($task, $_POST['time'], $_POST['command'], $_POST['status'], $_POST['comment']);
         }
 
-        $this->renderView('task_edit', array(
+        return $this->render('task_edit', array(
             'task' => $task,
-            'methods' => TaskManager::getAllMethods(self::CONTROLLERS_FOLDER),
+            'methods' => TaskManager::getAllMethods(self::$tasks_controllers_folder, self::$tasks_namespace),
         ));
     }
 
-    public function tasksUpdate()
+    public function actionTasksUpdate()
     {
         if (isset($_POST['task_id'])) {
-            $tasks = Task::find($_POST['task_id']);
+            $tasks = Task::findAll($_POST['task_id']);
             foreach ($tasks as $t) {
                 /**
                  * @var Task $t
@@ -145,17 +161,12 @@ class TasksController extends BaseController
         }
     }
 
-    public function checkTasks()
-    {
-        TaskManager::checkAndRunTasks(Task::getAll());
-    }
-
-    public function tasksReport()
+    public function actionTasksReport()
     {
         $date_begin = isset($_GET['date_begin']) ? $_GET['date_begin'] : date('Y-m-d', strtotime('-6 day'));
         $date_end = isset($_GET['date_end']) ? $_GET['date_end'] : date('Y-m-d');
 
-        $this->renderView('report', array(
+        return $this->render('report', array(
             'report' => Task::getReport($date_begin, $date_end),
             'date_begin' => $date_begin,
             'date_end' => $date_end,

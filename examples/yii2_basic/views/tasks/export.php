@@ -4,7 +4,7 @@
  * Date: 31.12.15
  * Time: 13:35
  */
-$this->load->view('tasks/template');
+echo $this->render('tasks_template');
 ?>
 <div class="col-lg-6">
     <h2>Import</h2>

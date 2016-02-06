@@ -4,7 +4,7 @@ namespace mult1mate\crontab;
 use Cron\CronExpression;
 
 /**
- * User: mult1mate
+ * @author mult1mate
  * Date: 20.12.15
  * Time: 12:55
  */
@@ -171,9 +171,9 @@ class TaskManager
                 $match[2],
                 explode(',', $match[3])
             );
-        } else {
-            throw new TaskManagerException('Command not recognized');
         }
+
+        throw new TaskManagerException('Command not recognized');
     }
 
     protected static function loadController($class_name)
@@ -208,11 +208,9 @@ class TaskManager
         $class_methods = get_class_methods($class);
         if ($parent_class = get_parent_class($class)) {
             $parent_class_methods = get_class_methods($parent_class);
-            $result_methods = array_diff($class_methods, $parent_class_methods);
-        } else {
-            $result_methods = $class_methods;
+            return array_diff($class_methods, $parent_class_methods);
         }
-        return ($result_methods);
+        return $class_methods;
     }
 
     /**
@@ -346,11 +344,7 @@ class TaskManager
     {
         switch ($name) {
             case self::SETTING_CLASS_FOLDERS:
-                if (is_array($value)) {
-                    self::$class_folders = $value;
-                } else {
-                    self::$class_folders = array($value);
-                }
+                self::$class_folders = is_array($value) ? $value : array($value);
                 break;
             case self::SETTING_LOAD_CLASS:
                 self::$load_class = (bool)$value;

@@ -1,6 +1,6 @@
 <?php
 /**
- * User: mult1mate
+ * @author mult1mate
  * Date: 31.12.15
  * Time: 13:35
  */

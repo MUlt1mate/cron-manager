@@ -1,7 +1,10 @@
 <?php
-use mult1mate\crontab\DbHelper;
+
+namespace app\models;
+
 use mult1mate\crontab\TaskInterface;
 use mult1mate\crontab\TaskRunInterface;
+use yii\db\ActiveRecord;
 
 /**
  * @author mult1mate
@@ -12,33 +15,50 @@ use mult1mate\crontab\TaskRunInterface;
  * @property string $command
  * @property string $status
  * @property string $comment
- * @property array $taskruns
  * @property string $ts
  * @property string $ts_updated
  */
-class Task extends DbBaseModel implements TaskInterface
+class Task extends ActiveRecord implements TaskInterface
 {
-    public static $primary_key = 'task_id';
-    public static $table_name = 'tasks';
-
-    public function attributes()
+    public static function tableName()
     {
-        return array('task_id', 'time', 'command', 'status', 'comment', 'ts', 'ts_updated');
+        return 'tasks';
     }
 
     public static function taskGet($task_id)
     {
-        return self::findByPk($task_id);
+        return self::findOne($task_id);
+    }
+
+    public static function getList()
+    {
+        return self::findBySql("SELECT * FROM `tasks`
+        WHERE `status` NOT IN('deleted')
+        ORDER BY status, task_id DESC")->all();
     }
 
     public static function getAll()
     {
-        return self::findAll();
+        return self::findAll([]);
     }
 
     public static function getReport($date_begin, $date_end)
     {
-        return self::getDb()->query(DbHelper::getReportSql(), array($date_begin, $date_end))->result();
+        $sql = "SELECT t.command, t.task_id,
+        SUM(CASE WHEN tr.status = 'started' THEN 1 ELSE 0 END) AS started,
+        SUM(CASE WHEN tr.status = 'completed' THEN 1 ELSE 0 END) AS completed,
+        SUM(CASE WHEN tr.status = 'error' THEN 1 ELSE 0 END) AS error,
+        round(AVG(tr.execution_time),2) AS time_avg,
+        count(*) AS runs
+        FROM task_runs AS tr
+        LEFT JOIN tasks AS t ON t.task_id=tr.task_id
+        WHERE tr.ts BETWEEN :date_begin AND :date_end + INTERVAL 1 DAY
+        GROUP BY command
+        ORDER BY tr.task_id";
+        return \Yii::$app->db->createCommand($sql, array(
+            ':date_begin' => $date_begin,
+            ':date_end' => $date_end
+        ))->queryAll();
     }
 
     public function taskDelete()
@@ -53,9 +73,7 @@ class Task extends DbBaseModel implements TaskInterface
 
     public static function createNew()
     {
-        $task = new self();
-        $task->ts = date('Y-m-d H:i:s');
-        return $task;
+        return new self();
     }
 
     /**
@@ -63,7 +81,6 @@ class Task extends DbBaseModel implements TaskInterface
      */
     public function createTaskRun()
     {
-        $this->load->model('TaskRun', 'task_run');
         return new TaskRun();
     }
 

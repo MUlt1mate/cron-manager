@@ -5,7 +5,7 @@
  * Time: 1:13
  * @var array $runs
  */
-$this->load->view('tasks/template');
+echo $this->render('tasks_template');
 ?>
 <table class="table table-bordered">
     <tr>
@@ -19,19 +19,19 @@ $this->load->view('tasks/template');
     </tr>
     <?php foreach ($runs as $r):
         /**
-         * @var TaskRun $r
+         * @var \app\models\TaskRun $r
          */
         ?>
         <tr>
-            <td><?= $r->task_run_id ?></td>
-            <td><?= $r->task_id ?> </td>
-            <td><?= $r->command ?></td>
-            <td><?= $r->status ?></td>
-            <td><?= $r->execution_time ?></td>
-            <td><?= $r->ts ?></td>
+            <td><?= $r['task_run_id'] ?></td>
+            <td><?= $r['task_id'] ?> </td>
+            <td><?= $r['command'] ?></td>
+            <td><?= $r['status'] ?></td>
+            <td><?= $r['execution_time'] ?></td>
+            <td><?= $r['ts'] ?></td>
             <td>
-                <?php if (!empty($r->output)): ?>
-                    <a href="<?= $r->task_run_id ?>" data-toggle="modal" data-target="#output_modal"
+                <?php if (!empty($r['output'])): ?>
+                    <a href="<?= $r['task_run_id'] ?>" data-toggle="modal" data-target="#output_modal"
                        class="show_output">Show output</a>
                 <?php endif; ?>
             </td>
