@@ -10,6 +10,7 @@ composer require mult1mate/cron-manager
 ### Requirements
 
 * PHP 5.4 or above
+* Yii2
 
 Tested with Yii2 v2.0.6
 

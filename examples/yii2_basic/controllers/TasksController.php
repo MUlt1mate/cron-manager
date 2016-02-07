@@ -5,6 +5,8 @@ use app\assets\TasksAsset;
 use app\models\Task;
 use app\models\TaskRun;
 use mult1mate\crontab\TaskInterface;
+use mult1mate\crontab\TaskLoader;
+use mult1mate\crontab\TaskRunner;
 use mult1mate\crontab\TaskManager;
 use yii\web\Controller;
 
@@ -30,7 +32,7 @@ class TasksController extends Controller
     {
         return $this->render('tasks_list', array(
             'tasks' => Task::getList(),
-            'methods' => TaskManager::getAllMethods(self::$tasks_controllers_folder, self::$tasks_namespace),
+            'methods' => TaskLoader::getAllMethods(self::$tasks_controllers_folder, self::$tasks_namespace),
         ));
     }
 
@@ -78,12 +80,12 @@ class TasksController extends Controller
                  * @var Task $task
                  */
 
-                $output = TaskManager::runTask($task);
+                $output = TaskRunner::runTask($task);
                 echo($output . '<hr>');
                 //            echo htmlentities($output);
             }
         } elseif (isset($_POST['custom_task'])) {
-            $result = TaskManager::parseAndRunCommand($_POST['custom_task']);
+            $result = TaskRunner::parseAndRunCommand($_POST['custom_task']);
             echo ($result) ? 'success' : 'failed';
         } else {
             echo 'empty task id';
@@ -93,7 +95,7 @@ class TasksController extends Controller
     public function actionGetDates()
     {
         $time = $_POST['time'];
-        $dates = TaskManager::getRunDates($time);
+        $dates = TaskRunner::getRunDates($time);
         if (empty($dates)) {
             echo 'Invalid expression';
             return;
@@ -138,7 +140,7 @@ class TasksController extends Controller
 
         return $this->render('task_edit', array(
             'task' => $task,
-            'methods' => TaskManager::getAllMethods(self::$tasks_controllers_folder, self::$tasks_namespace),
+            'methods' => TaskLoader::getAllMethods(self::$tasks_controllers_folder, self::$tasks_namespace),
         ));
     }
 

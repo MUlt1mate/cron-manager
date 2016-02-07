@@ -13,6 +13,7 @@ composer require mult1mate/cron-manager
 ### Requirements
 
 * PHP 5.4 or above
+* CodeIgniter framework
 
 Tested with CodeIgniter 3.0, but should work with v2.
 

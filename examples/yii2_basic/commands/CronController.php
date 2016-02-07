@@ -8,13 +8,13 @@
 namespace app\commands;
 
 use app\models\Task;
-use mult1mate\crontab\TaskManager;
+use mult1mate\crontab\TaskRunner;
 use yii\console\Controller;
 
 class CronController extends Controller
 {
     public function actionCheckTasks()
     {
-        TaskManager::checkAndRunTasks(Task::getAll());
+        TaskRunner::checkAndRunTasks(Task::getAll());
     }
 }

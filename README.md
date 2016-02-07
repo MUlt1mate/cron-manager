@@ -9,7 +9,7 @@ The purpose of this tool is to provide an easy way to manipulate repetitive task
 [![Build Status](https://travis-ci.org/MUlt1mate/cron-manager.svg?branch=master)](https://travis-ci.org/MUlt1mate/cron-manager)
 
 ## How this is works
-Replace all tasks in crontab file with one which will invoke method ```TaskManager::checkAndRunTasks()```.
+Replace all tasks in crontab file with one which will invoke method ```TaskRunner::checkAndRunTasks()```.
 
 Import tasks from current crontab file or add them manually. Active tasks will run one by one if current time matches with the task's time expression. Output of tasks can be handled. For each execution will be assigned status:
 * **Success** if method returned ```true```; 
@@ -43,7 +43,7 @@ composer require mult1mate/cron-manager
 * Implement `TaskInterface` and `TaskRunInterface` or use predefined classes from the Example folder
 * Copy and modify controller and views. Or create your own.
 * Import tasks through interface or add them manually
-* Add new line into crontab file that will invoke ```TaskManager::checkAndRunTasks()```
+* Add new line into crontab file that will invoke ```TaskRunner::checkAndRunTasks()```
 * Disable tasks that will be invoke through the manager
 * Make sure that manager is not publicly available
 

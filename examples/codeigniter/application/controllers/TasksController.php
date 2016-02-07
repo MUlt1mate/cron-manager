@@ -1,6 +1,8 @@
 <?php
 use mult1mate\crontab\TaskInterface;
 use mult1mate\crontab\TaskManager;
+use mult1mate\crontab\TaskRunner;
+use mult1mate\crontab\TaskLoader;
 
 /**
  * @author mult1mate
@@ -22,15 +24,14 @@ class TasksController extends CI_Controller
         $this->load->model('TaskRun', 'task_run');
         $this->controller_folder = __DIR__ . '/../models';
 
-        TaskManager::setSetting(TaskManager::SETTING_LOAD_CLASS, true);
-        TaskManager::setSetting(TaskManager::SETTING_CLASS_FOLDERS, $this->controller_folder);
+        TaskLoader::setClassFolder($this->controller_folder);
     }
 
     public function index()
     {
         $this->load->view('tasks/tasks_list', array(
             'tasks' => Task::findAll(array('not_in' => array('status', TaskInterface::TASK_STATUS_DELETED))),
-            'methods' => TaskManager::getAllMethods($this->controller_folder),
+            'methods' => TaskLoader::getAllMethods($this->controller_folder),
         ));
     }
 
@@ -50,7 +51,12 @@ class TasksController extends CI_Controller
     public function exportTasks()
     {
         if (isset($_POST['folder'])) {
-            $tasks = Task::findAll(array('in' => array('status', array(TaskInterface::TASK_STATUS_ACTIVE, TaskInterface::TASK_STATUS_INACTIVE))));
+            $tasks = Task::findAll(
+                array('in' => array(
+                    'status',
+                    array(TaskInterface::TASK_STATUS_ACTIVE, TaskInterface::TASK_STATUS_INACTIVE)
+                ))
+            );
             $result = array();
             foreach ($tasks as $t) {
                 $line = TaskManager::getTaskCrontabLine($t, $_POST['folder'], $_POST['php'], $_POST['file']);
@@ -77,12 +83,12 @@ class TasksController extends CI_Controller
                  * @var Task $task
                  */
 
-                $output = TaskManager::runTask($task);
+                $output = TaskRunner::runTask($task);
                 echo($output . '<hr>');
                 //            echo htmlentities($output);
             }
         } elseif (isset($_POST['custom_task'])) {
-            $result = TaskManager::parseAndRunCommand($_POST['custom_task']);
+            $result = TaskRunner::parseAndRunCommand($_POST['custom_task']);
             echo ($result) ? 'success' : 'failed';
         } else {
             echo 'empty task id';
@@ -92,7 +98,7 @@ class TasksController extends CI_Controller
     public function getDates()
     {
         $time = $_POST['time'];
-        $dates = TaskManager::getRunDates($time);
+        $dates = TaskRunner::getRunDates($time);
         if (empty($dates)) {
             echo 'Invalid expression';
             return;
@@ -137,7 +143,7 @@ class TasksController extends CI_Controller
 
         $this->load->view('tasks/task_edit', array(
             'task' => $task,
-            'methods' => TaskManager::getAllMethods($this->controller_folder),
+            'methods' => TaskLoader::getAllMethods($this->controller_folder),
         ));
     }
 
@@ -162,7 +168,7 @@ class TasksController extends CI_Controller
 
     public function checkTasks()
     {
-        TaskManager::checkAndRunTasks($this->task->getAll());
+        TaskRunner::checkAndRunTasks($this->task->getAll());
     }
 
     public function tasksReport()
