@@ -20,7 +20,8 @@
   },
   "autoload": {
     "psr-4": {
-      "mult1mate\\crontab\\": "src/"
+      "mult1mate\\crontab\\": "src/",
+      "mult1mate\\crontab_tests\\": "tests/"
     }
   }
 }

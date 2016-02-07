@@ -1,11 +1,14 @@
 <?php
+namespace mult1mate\crontab_tests;
+
+use mult1mate\crontab\TaskRunInterface;
 
 /**
  * @author mult1mate
  * Date: 01.02.16
  * Time: 10:12
  */
-class TaskRunMock implements \mult1mate\crontab\TaskRunInterface
+class TaskRunMock implements TaskRunInterface
 {
     private $task_run_id;
     private $task_id;

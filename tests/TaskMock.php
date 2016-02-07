@@ -1,4 +1,6 @@
 <?php
+namespace mult1mate\crontab_tests;
+
 use mult1mate\crontab\TaskInterface;
 
 /**
@@ -49,7 +51,7 @@ class TaskMock implements TaskInterface
      */
     public function createTaskRun()
     {
-        return new TaskMock();
+        return new TaskRunMock();
     }
 
     public function getTaskId()

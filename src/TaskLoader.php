@@ -32,6 +32,8 @@ class TaskLoader
                 require_once $filename;
                 if (class_exists($class_name)) {
                     return true;
+                } else {
+                    throw new TaskManagerException('file found but class ' . $class_name . ' not loaded');
                 }
             }
         }
@@ -92,11 +94,11 @@ class TaskLoader
      */
     public static function getAllMethods($folder, $namespace = array())
     {
-        $folders_list = is_array($folder) ? $folder : array($folder);
+        self::setClassFolder($folder);
         $namespaces_list = is_array($namespace) ? $namespace : array($namespace);
         $methods = array();
 
-        $controllers = self::getControllersList($folders_list, $namespaces_list);
+        $controllers = self::getControllersList(self::$class_folders, $namespaces_list);
         foreach ($controllers as $c) {
             if (!class_exists($c)) {
                 self::loadController($c);
@@ -106,7 +108,6 @@ class TaskLoader
 
         return $methods;
     }
-
 
     /**
      * Sets folders which contain needed classes

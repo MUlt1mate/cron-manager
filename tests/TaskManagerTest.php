@@ -1,4 +1,6 @@
 <?php
+namespace mult1mate\crontab_tests;
+
 use mult1mate\crontab\TaskManager;
 
 /**
@@ -6,7 +8,7 @@ use mult1mate\crontab\TaskManager;
  * Date: 01.02.16
  * Time: 0:48
  */
-class TaskManagerTest extends PHPUnit_Framework_TestCase
+class TaskManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testValidateCommand()
     {

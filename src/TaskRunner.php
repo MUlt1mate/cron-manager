@@ -105,11 +105,10 @@ class TaskRunner
                 throw new TaskManagerException('method ' . $method . ' not found in class ' . $class);
             }
 
-            $result = call_user_func_array(array($obj, $method), $args);
+            return call_user_func_array(array($obj, $method), $args);
         } catch (\Exception $e) {
             echo 'Caught an exception: ' . get_class($e) . ': ' . PHP_EOL . $e->getMessage() . PHP_EOL;
             return false;
         }
-        return $result;
     }
 }
