@@ -7,6 +7,8 @@ The purpose of this tool is to provide an easy way to manipulate repetitive task
 [Live Demo](https://cron.multimate.ru)
 
 [![Build Status](https://travis-ci.org/MUlt1mate/cron-manager.svg?branch=master)](https://travis-ci.org/MUlt1mate/cron-manager)
+[![Code Climate](https://codeclimate.com/github/MUlt1mate/cron-manager/badges/gpa.svg)](https://codeclimate.com/github/MUlt1mate/cron-manager)
+[![Test Coverage](https://codeclimate.com/github/MUlt1mate/cron-manager/badges/coverage.svg)](https://codeclimate.com/github/MUlt1mate/cron-manager/coverage)
 
 ## How this is works
 Replace all tasks in crontab file with one which will invoke method ```TaskRunner::checkAndRunTasks()```.
