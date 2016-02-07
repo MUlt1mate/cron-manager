@@ -1,18 +1,24 @@
 <?php
+namespace mult1mate\crontab;
+
 /**
+ * Interface TaskRunInterface
+ * Common interface to handle task runs
+ * @package mult1mate\crontab
  * @author mult1mate
  * Date: 20.12.15
  * Time: 18:49
  */
-
-namespace mult1mate\crontab;
-
 interface TaskRunInterface
 {
     const RUN_STATUS_STARTED = 'started';
     const RUN_STATUS_COMPLETED = 'completed';
     const RUN_STATUS_ERROR = 'error';
 
+    /**
+     * Saves the task run
+     * @return mixed
+     */
     public function saveTaskRun();
 
     /**

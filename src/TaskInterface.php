@@ -1,15 +1,13 @@
 <?php
-/**
- * @author mult1mate
- * Date: 20.12.15
- * Time: 13:25
- */
-
 namespace mult1mate\crontab;
 
 /**
  * Interface TaskInterface
+ * Common interface to handle tasks
  * @package mult1mate\crontab
+ * @author mult1mate
+ * Date: 20.12.15
+ * Time: 13:25
  */
 interface TaskInterface
 {
@@ -17,20 +15,39 @@ interface TaskInterface
     const TASK_STATUS_INACTIVE = 'inactive';
     const TASK_STATUS_DELETED = 'deleted';
 
+    /**
+     * Returns tasks with given id
+     * @param int $task_id
+     * @return TaskInterface
+     */
     public static function taskGet($task_id);
 
+    /**
+     * Returns array of all tasks
+     * @return array
+     */
     public static function getAll();
 
+    /**
+     * Deletes the task
+     * @return mixed
+     */
     public function taskDelete();
 
+    /**
+     * Saves the task
+     * @return mixed
+     */
     public function taskSave();
 
     /**
+     * Creates new task object and returns it
      * @return TaskInterface
      */
     public static function createNew();
 
     /**
+     * Creates new task run object for current task and returns it
      * @return TaskRunInterface
      */
     public function createTaskRun();

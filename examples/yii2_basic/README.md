@@ -15,8 +15,6 @@ Tested with Yii2 v2.0.6
 
 ### Implementation
 
-In this example DbBaseModel provides access to DB. Models Task and TaskRun extend it.
-
 Yii2 controllers use parameters in controllers __construct() method. It's recommended to run methods only from models.
 
 ### Configure
