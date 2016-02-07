@@ -9,6 +9,13 @@ engines:
     enabled: true
   phpmd:
     enabled: true
+    config:
+      file_extensions: "php"
+      rulesets: "unusedcode,codesize"
+  phpcodesniffer:
+    enabled: true
+    config:
+      standard: "PSR1,PSR2"
 ratings:
   paths:
   - src/**

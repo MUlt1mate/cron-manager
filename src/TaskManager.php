@@ -24,10 +24,10 @@ class TaskManager
      */
     public static function editTask($task, $time, $command, $status = TaskInterface::TASK_STATUS_ACTIVE, $comment = null)
     {
-        $task->setStatus($status);
         if (!$validated_command = self::validateCommand($command)) {
             return $task;
         }
+        $task->setStatus($status);
         $task->setCommand($validated_command);
         $task->setTime($time);
         if (isset($comment)) {
