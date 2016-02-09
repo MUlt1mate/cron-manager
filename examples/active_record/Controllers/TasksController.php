@@ -11,13 +11,13 @@ use mult1mate\crontab\TaskRunner;
  */
 class TasksController extends BaseController
 {
-    const CONTROLLERS_FOLDER = __DIR__;
+    private static $tasks_controllers_folder = __DIR__;
 
     public function index()
     {
         $this->renderView('tasks_list', array(
             'tasks' => Task::getList(),
-            'methods' => TaskLoader::getAllMethods(self::CONTROLLERS_FOLDER),
+            'methods' => TaskLoader::getAllMethods(self::$tasks_controllers_folder),
         ));
     }
 
@@ -29,8 +29,33 @@ class TasksController extends BaseController
     public function parseCrontab()
     {
         if (isset($_POST['crontab'])) {
+            $result_summon = $tasks = array();
             $result = TaskManager::parseCrontab($_POST['crontab'], new Task());
-            echo json_encode($result);
+            foreach ($result as $r) {
+                $result_summon[$r[1]] = (isset($result_summon[$r[1]])) ? $result_summon[$r[1]] + 1 : 1;
+                if (isset($r[2]) && is_object($r[2])) {
+                    $task = $r[2];
+                    /**
+                     * @var Task $task
+                     */
+                    $tasks[] = '#' . $task->getComment() . '<br>' . $task->getTime() . ' ' . $task->getCommand();
+                }
+            }
+            echo '<h3>Results</h3>
+                <b>';
+            foreach ($result_summon as $value => $count) {
+                echo $value . ': ' . $count . '<br>';
+            }
+            if (!empty($tasks)) {
+                echo '<h4>Saved tasks</h4>';
+            }
+            echo '</b><code>' . implode('<hr>', $tasks) . '</code><hr>';
+            echo '<h4>Not saved lines</h4>';
+            foreach ($result as $r) {
+                if (in_array($r[1], array('Not matched', 'Time expression is not valid'))) {
+                    echo '<b>' . $r[1] . '</b><br>' . $r[0] . '<br>';
+                }
+            }
         }
     }
 
@@ -124,7 +149,7 @@ class TasksController extends BaseController
 
         $this->renderView('task_edit', array(
             'task' => $task,
-            'methods' => TaskLoader::getAllMethods(self::CONTROLLERS_FOLDER),
+            'methods' => TaskLoader::getAllMethods(self::$tasks_controllers_folder),
         ));
     }
 

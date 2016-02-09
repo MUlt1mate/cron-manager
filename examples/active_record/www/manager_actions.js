@@ -74,15 +74,15 @@ $(function () {
     //export page
     $('#parse_crontab_form').submit(function () {
         $.post(controller_url + '?m=parseCrontab', $(this).serialize(), function (data) {
-            var list = '';
+            /*var list = '';
             data.forEach(function (element) {
                 element.forEach(function (el) {
                     list += '' + el + '<br>';
                 });
                 list += '<hr>';
-            });
-            $('#parse_result').html(list);
-        }, 'json');
+            });*/
+            $('#parse_result').html(data);
+        });
         return false;
     });
     $('#export_form').submit(function () {

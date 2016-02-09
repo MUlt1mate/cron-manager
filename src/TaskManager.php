@@ -13,6 +13,8 @@ use Cron\CronExpression;
  */
 class TaskManager
 {
+    const CRON_LINE_REGEXP = '/(#?)(.*)cd.*php.*\.php\s+([\w\d-_]+)\s+([\w\d-_]+)\s*([\d\w-_\s]+)?(\d[\d>&\s]+)(.*)?/i';
+
     /**
      * Edit and save TaskInterface object
      * @param TaskInterface $task
@@ -67,10 +69,15 @@ class TaskManager
     public static function parseCommand($command)
     {
         if (preg_match('/([\w\\\\]+)::(\w+)\((.*)\)/', $command, $match)) {
+            $params = explode(',', $match[3]);
+            if ((1 == count($params)) && ('' == $params[0])) {
+                //prevents to pass an empty string
+                $params[0] = null;
+            }
             return array(
                 $match[1],
                 $match[2],
-                explode(',', $match[3])
+                $params
             );
         }
 
@@ -93,43 +100,58 @@ class TaskManager
             if (empty($c)) {
                 continue;
             }
-            $r = array();
-            $r[] = $c;
-            $cron_line_exp = '/(#?)(.*)cd.*php.*\.php\s+([\w\d-_]+)\s+([\w\d-_]+)\s*([\d\w-_\s]+)?(\d[\d>&\s]+)(.*)?/i';
-            if (preg_match($cron_line_exp, $c, $matches)) {
+            $r = array($c);
+            if (preg_match(self::CRON_LINE_REGEXP, $c, $matches)) {
                 try {
                     CronExpression::factory($matches[2]);
                 } catch (\Exception $e) {
-                    $r[] = 'Time expression ' . $matches[2] . ' not valid';
+                    $r[1] = 'Time expression is not valid';
+                    $r[2] = $matches[2];
                     $result[] = $r;
                     continue;
                 }
-                $task = $task_class::createNew();
-                $task->setTime(trim($matches[2]));
-                $arguments = str_replace(' ', ',', trim($matches[5]));
-                $command = ucfirst($matches[3]) . '::' . $matches[4] . '(' . $arguments . ')';
-                $task->setCommand($command);
-                if (!empty($comment)) {
-                    $task->setComment($comment);
-                }
-                $status = empty($matches[1]) ? TaskInterface::TASK_STATUS_ACTIVE : TaskInterface::TASK_STATUS_INACTIVE;
-                $task->setStatus($status);
-                $task->setTs(date('Y-m-d H:i:s'));
-                $task->taskSave();
-                //$output = $matches[7];
-                $r [] = 'Saved';
+                $task = self::createTaskWithCrontabLine($task_class, $matches, $comment);
+
+                $r [1] = 'Saved';
+                $r [2] = $task;
 
                 $comment = null;
             } elseif (preg_match('/#([\w\d\s]+)/i', $c, $matches)) {
                 $comment = trim($matches[1]);
-                $r [] = 'Looks like a comment';
+                $r [1] = 'Comment';
+                $r [2] = $comment;
             } else {
-                $r [] = 'Not matched';
+                $r [1] = 'Not matched';
             }
             $result[] = $r;
         }
 
         return $result;
+    }
+
+    /**
+     * Creates new TaskInterface object from parsed crontab line
+     * @param TaskInterface $task_class
+     * @param array $matches
+     * @param string $comment
+     * @return TaskInterface
+     */
+    private static function createTaskWithCrontabLine($task_class, $matches, $comment)
+    {
+        $task = $task_class::createNew();
+        $task->setTime(trim($matches[2]));
+        $arguments = str_replace(' ', ',', trim($matches[5]));
+        $command = ucfirst($matches[3]) . '::' . $matches[4] . '(' . $arguments . ')';
+        $task->setCommand($command);
+        if (!empty($comment)) {
+            $task->setComment($comment);
+        }
+        //$output = $matches[7];
+        $status = empty($matches[1]) ? TaskInterface::TASK_STATUS_ACTIVE : TaskInterface::TASK_STATUS_INACTIVE;
+        $task->setStatus($status);
+        $task->setTs(date('Y-m-d H:i:s'));
+        $task->taskSave();
+        return $task;
     }
 
     /**
