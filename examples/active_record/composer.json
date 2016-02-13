@@ -9,7 +9,8 @@
   ],
   "minimum-stability": "stable",
   "require": {
-    "php-activerecord/php-activerecord": "v1.1.2"
+    "php-activerecord/php-activerecord": "v1.1.2",
+    "mult1mate/cron-manager": "*"
   },
   "autoload": {
     "psr-4": {

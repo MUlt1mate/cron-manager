@@ -29,6 +29,8 @@
          * @var Task $t
          */
         $status_class = (\mult1mate\crontab\TaskInterface::TASK_STATUS_ACTIVE == $t->status) ? '' : 'text-danger';
+        $ts = !empty($t->ts) ? $t->ts->format('Y-m-d H:i') : '';
+        $ts_updated = !empty($t->ts_updated) ? $t->ts_updated->format('Y-m-d H:i') : '';
         ?>
         <tr>
             <td>
@@ -39,8 +41,8 @@
             <td><?= $t->command ?></td>
             <td class="<?= $status_class ?>"><?= $t->status ?></td>
             <td><?= $t->comment ?></td>
-            <td><?= $t->ts->format('Y-m-d H:i') ?></td>
-            <td><?= $t->ts_updated->format('Y-m-d H:i') ?></td>
+            <td><?= $ts ?></td>
+            <td><?= $ts_updated ?></td>
             <td>
                 <a href="?m=taskEdit&task_id=<?= $t->task_id ?>">Edit</a>
             </td>

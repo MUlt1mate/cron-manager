@@ -7,13 +7,15 @@
  */
 class BaseController
 {
-    public function __construct()
+    public function __construct($db_user, $db_pass, $db_name, $server = 'localhost')
     {
-        ActiveRecord\Config::initialize(function ($cfg) {
-            $cfg->set_model_directory('../models');
-            $cfg->set_connections(array(
-                'development' => 'mysql://root:qwerty@localhost/crontab'));
-        });
+        $cfg = ActiveRecord\Config::instance();
+        $cfg->set_model_directory('../models');
+        $cfg->set_connections(
+            array(
+                'development' => 'mysql://' . $db_user . ':' . $db_pass . '@' . $server . '/' . $db_name
+            )
+        );
     }
 
     protected function renderView($view, $params, $template = true)
