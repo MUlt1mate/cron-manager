@@ -10,6 +10,7 @@ The purpose of this tool is to provide an easy way to manipulate repetitive task
 [![Code Climate](https://codeclimate.com/github/MUlt1mate/cron-manager/badges/gpa.svg)](https://codeclimate.com/github/MUlt1mate/cron-manager)
 [![Test Coverage](https://codeclimate.com/github/MUlt1mate/cron-manager/badges/coverage.svg)](https://codeclimate.com/github/MUlt1mate/cron-manager/coverage)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
+[![Gitter](https://badges.gitter.im/MUlt1mate/cron-manager.svg)](https://gitter.im/MUlt1mate/cron-manager)
 
 ## How this is works
 Replace all tasks in crontab file with one which will invoke method ```TaskRunner::checkAndRunTasks()```.
