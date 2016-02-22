@@ -26,7 +26,7 @@ $this->load->view('tasks/template');
         <div class="form-group">
             <label for="command">Command</label>
             <input type="text" class="form-control" id="command" name="command" placeholder="Controller::method"
-                   value="<?= $task->command ?>">
+                   value="<?= $task->command ?>" required>
         </div>
         <div class="form-group">
             <label for="status">Status</label>
@@ -63,7 +63,7 @@ $this->load->view('tasks/template');
         <div class="form-group">
             <label for="time">Time</label>
             <input type="text" class="form-control" id="time" name="time" placeholder="* * * * *"
-                   value="<?= $task->time ?>" style="width: 200px;">
+                   value="<?= $task->time ?>" style="width: 200px;" required>
         </div>
     <pre>
 *    *    *    *    *

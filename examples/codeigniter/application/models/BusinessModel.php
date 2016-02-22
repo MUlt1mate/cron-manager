@@ -10,7 +10,10 @@ class BusinessModel extends CI_Model
     public function test()
     {
         $task = Task::findOne();
-        print_r($task);
+        /**
+         * @var \mult1mate\crontab\TaskInterface $task
+         */
+        echo $task->getCommand();
         return true;
     }
 }

@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * This class provides access to DB.
+ * It's not a part of main library, just an example.
+ * And it's pretty poor. Please consider use your own implementation.
  * @property CI_DB_query_builder $db
  */
 class DbBaseModel extends CI_Model
@@ -63,7 +66,7 @@ class DbBaseModel extends CI_Model
 
     /**
      * @param $value
-     * @return self
+     * @return self|false
      */
     public static function findByPk($value)
     {
@@ -224,7 +227,6 @@ class DbBaseModel extends CI_Model
 
     public function save()
     {
-        //        var_dump($this->db);
         if ($this->beforeSave()) {
             $result = $this->isNewRecord() ? $this->insert() : $this->update();
             if ($result) {
@@ -241,7 +243,7 @@ class DbBaseModel extends CI_Model
 
         $this->db->insert(static::$table_name, $insert);
 
-        if (false == ($new_id = $this->db->insert_id())) {
+        if (false === ($new_id = $this->db->insert_id())) {
             return false;
         }
 
@@ -294,7 +296,7 @@ class DbBaseModel extends CI_Model
             return false;
         }
 
-        if (false == $this->beforeDelete()) {
+        if (false === $this->beforeDelete()) {
             return false;
         }
 

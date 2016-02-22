@@ -15,11 +15,9 @@ class ActiveController extends BaseController
 
     public function randomResult()
     {
-        $rand = rand(0, 4);
+        $rand = rand(1, 4);
         echo 'The winner is number ' . $rand . PHP_EOL;
         switch ($rand) {
-            case 0:
-                die('Bad result');
             case 1:
                 return true;
             case 2:

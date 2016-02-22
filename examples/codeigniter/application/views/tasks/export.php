@@ -11,7 +11,7 @@ $this->load->view('tasks/template');
     <form method="post" id="parse_crontab_form">
         <div class="form-group">
             <label for="crontab">Paste crontab content</label>
-            <textarea class="form-control" name="crontab" id="crontab"></textarea>
+            <textarea class="form-control" name="crontab" id="crontab" required></textarea>
         </div>
         <div class="form-group">
             <input type="submit" value="Parse" class="btn btn-primary">

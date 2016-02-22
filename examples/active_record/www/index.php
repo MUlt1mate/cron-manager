@@ -2,13 +2,11 @@
 //composer autoload
 require_once '../vendor/autoload.php';
 //application autoload
-function __autoload($class_name)
-{
+spl_autoload_register(function ($class_name) {
     if (file_exists('../Controllers/' . $class_name . '.php')) {
         require_once '../Controllers/' . $class_name . '.php';
     }
-}
-spl_autoload_register('__autoload');
+});
 
 //db config
 $db_user = 'root';

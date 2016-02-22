@@ -91,7 +91,6 @@ class TasksController extends BaseController
 
                 $output = TaskRunner::runTask($task);
                 echo($output . '<hr>');
-                //            echo htmlentities($output);
             }
         } elseif (isset($_POST['custom_task'])) {
             $result = TaskRunner::parseAndRunCommand($_POST['custom_task']);
