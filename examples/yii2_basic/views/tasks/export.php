@@ -5,6 +5,7 @@
  * Time: 13:35
  */
 echo $this->render('tasks_template');
+$this->title = 'Task Manager - Import/Export';
 ?>
 <div class="col-lg-6">
     <h2>Import</h2>

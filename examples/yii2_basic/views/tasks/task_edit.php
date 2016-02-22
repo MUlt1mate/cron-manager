@@ -3,12 +3,15 @@
  * @author mult1mate
  * Date: 21.12.15
  * Time: 0:56
- * @var Task $task
+ * @var \app\models\Task $task
  * @var array $methods
  */
+use yii\bootstrap\ActiveForm;
+
 echo $this->render('tasks_template');
+$this->title = 'Task Manager - Edit task';
+$form = ActiveForm::begin([]);
 ?>
-<form method="post">
     <div class="col-lg-6">
         <div class="form-group">
             <label for="method">Methods</label>
@@ -23,36 +26,21 @@ echo $this->render('tasks_template');
                 <?php endforeach; ?>
             </select>
         </div>
-        <div class="form-group">
-            <label for="command">Command</label>
-            <input type="text" class="form-control" id="command" name="command" placeholder="Controller::method"
-                   value="<?= $task->command ?>">
-        </div>
-        <div class="form-group">
-            <label for="status">Status</label>
-            <select name="status" class="form-control" id="status">
-                <option value="active">Active</option>
-                <option value="inactive"<?php if ('inactive' == $task->status) echo ' selected' ?>>Inactive</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="comment">Comment</label>
-            <input type="text" class="form-control" id="comment" name="comment" value="<?= $task->comment ?>">
-        </div>
+        <?= $form->field($task, 'command')->textInput(['placeholder' => 'Controller::method']) ?>
+        <?= $form->field($task, 'status')->dropDownList(array(
+            \mult1mate\crontab\TaskInterface::TASK_STATUS_ACTIVE => 'Active',
+            \mult1mate\crontab\TaskInterface::TASK_STATUS_INACTIVE => 'Inactive',
+            \mult1mate\crontab\TaskInterface::TASK_STATUS_DELETED => 'Deleted',
+        )) ?>
+        <?= $form->field($task, 'comment') ?>
 
-        <?php if ($task->task_id): ?>
-            <input type="hidden" name="task_id" value="<?= $task->task_id ?>">
-        <?php endif; ?>
-
-        <input type="hidden" name="<?= \Yii::$app->request->csrfParam; ?>"
-               value="<?= Yii::$app->request->csrfToken; ?>"/>
         <button type="submit" class="btn btn-primary">Save</button>
 
     </div>
     <div class="col-lg-6">
         <div class="form-group">
             <label for="times">Predefined intervals</label>
-            <select class="form-control" id="times" style="width: 200px;">
+            <select class="form-control" id="times">
                 <option></option>
                 <option value="* * * * *">Minutely</option>
                 <option value="0 * * * *">Hourly</option>
@@ -62,12 +50,8 @@ echo $this->render('tasks_template');
                 <option value="0 0 1 1 *">Yearly</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="time">Time</label>
-            <input type="text" class="form-control" id="time" name="time" placeholder="* * * * *"
-                   value="<?= $task->time ?>" style="width: 200px;">
-        </div>
-    <pre>
+        <?= $form->field($task, 'time')->textInput(['placeholder' => '* * * * *']) ?>
+        <pre>
 *    *    *    *    *
 -    -    -    -    -
 |    |    |    |    |
@@ -81,4 +65,5 @@ echo $this->render('tasks_template');
         <h4>Next runs</h4>
         <div id="dates_list"></div>
     </div>
-</form>
+<?php
+ActiveForm::end();

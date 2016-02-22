@@ -133,8 +133,16 @@ class TasksController extends Controller
         /**
          * @var Task $task
          */
-        if (!empty($_POST)) {
-            $task = TaskManager::editTask($task, $_POST['time'], $_POST['command'], $_POST['status'], $_POST['comment']);
+        $post = \Yii::$app->request->post();
+        if ($task->load($post) && $task->validate()) {
+            $task = TaskManager::editTask(
+                $task,
+                $post['Task']['time'],
+                $post['Task']['command'],
+                $post['Task']['status'],
+                $post['Task']['comment']
+            );
+            \Yii::$app->response->redirect('/?r=tasks/task-edit&task_id=' . $task->task_id);
         }
 
         return $this->render('task_edit', array(

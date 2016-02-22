@@ -20,7 +20,7 @@ Yii2 controllers use parameters in controllers __construct() method. It's recomm
 
 ### Configure
 * Copy folders into your project files
-* Create DB tables (SQL queries in `DbHelper` class)
+* run `yii/migrate` to create DB tables or use SQL queries in `DbHelper` class
 * Modify controller and views or create your own.
 * Import tasks through interface or add them manually
 * Add new line into crontab file ```yii cron/check-tasks```

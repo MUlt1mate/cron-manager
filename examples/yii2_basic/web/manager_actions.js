@@ -50,16 +50,16 @@ window.onload = function () {
 
     //edit page
     $('#method').change(function () {
-        $('#command').val($(this).val());
+        $('#task-command').val($(this).val());
     });
 
     function getRunDates() {
-        $.post(controller_url + 'get-dates', {time: $('#time').val()}, function (data) {
+        $.post(controller_url + 'get-dates', {time: $('#task-time').val()}, function (data) {
             $('#dates_list').html(data);
         })
     }
 
-    var $time = $('#time');
+    var $time = $('#task-time');
     $time.change(function () {
         getRunDates();
     });
@@ -67,7 +67,7 @@ window.onload = function () {
         getRunDates();
 
     $('#times').change(function () {
-        $('#time').val($(this).val());
+        $time.val($(this).val());
         getRunDates();
     });
 

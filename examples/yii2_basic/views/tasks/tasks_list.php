@@ -7,6 +7,7 @@
  * @var array $methods
  */
 echo $this->render('tasks_template');
+$this->title = 'Task Manager - Task list';
 ?>
 <table class="table table-bordered">
     <tr>

@@ -8,6 +8,7 @@
  * @var array $report
  */
 echo $this->render('tasks_template');
+$this->title = 'Task Manager - Report';
 ?>
 <form class="form-inline" action="">
     <div class="form-group">

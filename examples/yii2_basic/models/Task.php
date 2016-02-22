@@ -61,6 +61,18 @@ class Task extends ActiveRecord implements TaskInterface
         ))->queryAll();
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['time', 'command', 'status'], 'required'],
+            [['time', 'status'], 'string', 'max' => 64],
+            [['command'], 'string', 'max' => 256],
+        ];
+    }
+
     public function taskDelete()
     {
         return $this->delete();

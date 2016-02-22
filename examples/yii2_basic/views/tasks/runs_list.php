@@ -6,6 +6,7 @@
  * @var array $runs
  */
 echo $this->render('tasks_template');
+$this->title = 'Task Manager - Run list';
 ?>
 <table class="table table-bordered">
     <tr>
