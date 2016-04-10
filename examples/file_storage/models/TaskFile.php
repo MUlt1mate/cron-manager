@@ -2,6 +2,7 @@
 use mult1mate\crontab\TaskInterface;
 
 /**
+ * Model that stores task information in file
  * @author mult1mate
  * Date: 22.02.16
  * Time: 17:33
@@ -17,11 +18,13 @@ class TaskFile implements TaskInterface
     protected $ts_updated;
 
     /**
+     * Data file. Creates if not exists.
      * @var string
      */
     protected static $data_file = '/tmp/crontasks';
 
     /**
+     * Reads file from disk and returns array of tasks
      * @return array
      */
     public static function taskFileLoad()
@@ -38,7 +41,8 @@ class TaskFile implements TaskInterface
     }
 
     /**
-     * @param $tasks
+     * Writes tasks into file
+     * @param array $tasks
      * @return bool
      */
     public static function taskFileSave($tasks)
@@ -70,6 +74,11 @@ class TaskFile implements TaskInterface
         return self::taskFileLoad();
     }
 
+    /**
+     * Returns array of tasks with specified ids
+     * @param array $task_ids array of task ids
+     * @return array
+     */
     public static function find($task_ids)
     {
         if (!is_array($task_ids)) {
@@ -136,7 +145,7 @@ class TaskFile implements TaskInterface
      */
     public function createTaskRun()
     {
-        return new TaskRun();
+        return new TaskRunFile();
     }
 
     /**

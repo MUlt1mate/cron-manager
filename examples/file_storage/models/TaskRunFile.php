@@ -1,38 +1,54 @@
 <?php
-use ActiveRecord\Model;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Logger;
 use mult1mate\crontab\TaskRunInterface;
 
 /**
+ * This model saves task run results into log files
  * @author mult1mate
- * Date: 20.12.15
- * Time: 21:12
- * @property int $task_run_id
- * @property int $task_id
- * @property string $status
- * @property string $output
- * @property int $execution_time
- * @property Task $task
- * @property \ActiveRecord\DateTime $ts
+ * Date: 10.04.16
+ * Time: 13:39
  */
-class TaskRun extends Model implements TaskRunInterface
+class TaskRunFile implements TaskRunInterface
 {
-    static public $belongs_to = array(
-        array('task')
-    );
+    protected $task_id;
+    protected $status;
+    protected $execution_time;
+    protected $output;
+    protected $ts;
 
-    public static function getLast($task_id = null, $count = 100)
-    {
-        $conditions = array('order' => 'task_run_id desc', 'include' => array('task'), 'limit' => $count);
-        if ($task_id) {
-            $conditions['conditions'] = array('task_id' => $task_id);
-        }
+    /**
+     * Folder with logs files. Should exists
+     * @var string
+     */
+    protected $logs_folder = '/tmp/crontasks_logs/';
 
-        return self::find('all', $conditions);
-    }
+    /**
+     * Default log file name
+     * @var string
+     */
+    protected $log_name = 'cron_log.log';
 
+    /**
+     * Writes log in file. Do NOT actually saves the task run
+     * @return bool
+     */
     public function saveTaskRun()
     {
-        return $this->save();
+        //if monolog not found does nothing
+        if (!class_exists('Monolog\Logger')) {
+            return false;
+        }
+        $logger = new Logger('cron_logger');
+        $logger->pushHandler(new RotatingFileHandler($this->logs_folder . $this->log_name));
+        $task = TaskFile::taskGet($this->task_id);
+        if (self::RUN_STATUS_STARTED == $this->status) {
+            $message = 'task ' . $task->getCommand() . ' just started';
+        } else {
+            $message = 'task ' . $task->getCommand() . ' ended with status ' . $this->status
+                . ', execution time ' . $this->execution_time . ', output: ' . PHP_EOL . $this->output;
+        }
+        return $logger->addNotice($message);
     }
 
     /**
@@ -40,7 +56,7 @@ class TaskRun extends Model implements TaskRunInterface
      */
     public function getTaskRunId()
     {
-        return $this->task_run_id;
+        return 0;
     }
 
     /**

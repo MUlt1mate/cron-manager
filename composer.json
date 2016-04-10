@@ -2,7 +2,12 @@
   "name": "mult1mate/cron-manager",
   "description": "Flexible cron tasks manager for MVC-type applications",
   "minimum-stability": "stable",
-  "keywords": ["cron","crontab","tasks manager","schedule"],
+  "keywords": [
+    "cron",
+    "crontab",
+    "tasks manager",
+    "schedule"
+  ],
   "homepage": "https://cron.multimate.ru",
   "license": "MIT",
   "authors": [
@@ -14,6 +19,9 @@
   "require": {
     "php": ">=5.3.2",
     "mtdowling/cron-expression": "1.1.*"
+  },
+  "suggest": {
+    "monolog/monolog": "Allow writing log messages"
   },
   "require-dev": {
     "phpunit/phpunit": "4.*",

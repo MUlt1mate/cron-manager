@@ -52,9 +52,9 @@ composer require mult1mate/cron-manager
 * Make sure that manager is not publicly available
 
 See also examples for [ActiveRecord](https://github.com/MUlt1mate/cron-manager/tree/master/examples/active_record), 
-[CodeIgniter](https://github.com/MUlt1mate/cron-manager/tree/master/examples/codeigniter) 
-and [Yii2](https://github.com/MUlt1mate/cron-manager/tree/master/examples/yii2_basic)
-
+[CodeIgniter](https://github.com/MUlt1mate/cron-manager/tree/master/examples/codeigniter), 
+[Yii2](https://github.com/MUlt1mate/cron-manager/tree/master/examples/yii2_basic),
+[File storage](https://github.com/MUlt1mate/cron-manager/tree/master/examples/file_storage),
 
 ## Screenshots
 
@@ -64,3 +64,7 @@ and [Yii2](https://github.com/MUlt1mate/cron-manager/tree/master/examples/yii2_b
 ![Import and export](https://cron.multimate.ru/img/Selection_003.png)
 
 See [Live Demo](https://cron.multimate.ru) for more!
+
+## Changelog
+
+* v1.1.0 - File storage models added
