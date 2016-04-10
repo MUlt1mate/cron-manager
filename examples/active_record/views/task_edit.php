@@ -3,7 +3,7 @@
  * @author mult1mate
  * Date: 21.12.15
  * Time: 0:56
- * @var Task $task
+ * @var \mult1mate\crontab\TaskInterface $task
  * @var array $methods
  */
 ?>
@@ -25,22 +25,23 @@
         <div class="form-group">
             <label for="command">Command</label>
             <input type="text" class="form-control" id="command" name="command" placeholder="Controller::method"
-                   value="<?= $task->command ?>" required>
+                   value="<?= $task->getCommand() ?>" required>
         </div>
         <div class="form-group">
             <label for="status">Status</label>
             <select name="status" class="form-control" id="status">
                 <option value="active">Active</option>
-                <option value="inactive"<?php if ('inactive' == $task->status) echo ' selected' ?>>Inactive</option>
+                <option value="inactive"<?php if ('inactive' == $task->getStatus()) echo ' selected' ?>>Inactive
+                </option>
             </select>
         </div>
         <div class="form-group">
             <label for="comment">Comment</label>
-            <input type="text" class="form-control" id="comment" name="comment" value="<?= $task->comment ?>">
+            <input type="text" class="form-control" id="comment" name="comment" value="<?= $task->getComment() ?>">
         </div>
 
-        <?php if ($task->task_id): ?>
-            <input type="hidden" name="task_id" value="<?= $task->task_id ?>">
+        <?php if ($task->getTaskId()): ?>
+            <input type="hidden" name="task_id" value="<?= $task->getTaskId() ?>">
         <?php endif; ?>
 
         <button type="submit" class="btn btn-primary">Save</button>
@@ -62,7 +63,7 @@
         <div class="form-group">
             <label for="time">Time</label>
             <input type="text" class="form-control" id="time" name="time" placeholder="* * * * *"
-                   value="<?= $task->time ?>" style="width: 200px;" required>
+                   value="<?= $task->getTime() ?>" style="width: 200px;" required>
         </div>
     <pre>
 *    *    *    *    *

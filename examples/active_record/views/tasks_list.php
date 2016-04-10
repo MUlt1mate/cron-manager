@@ -26,31 +26,31 @@
     <?php
     foreach ($tasks as $t):
         /**
-         * @var Task $t
+         * @var \mult1mate\crontab\TaskInterface $t
          */
-        $status_class = (\mult1mate\crontab\TaskInterface::TASK_STATUS_ACTIVE == $t->status) ? '' : 'text-danger';
-        $ts = !empty($t->ts) ? $t->ts->format('Y-m-d H:i') : '';
-        $ts_updated = !empty($t->ts_updated) ? $t->ts_updated->format('Y-m-d H:i') : '';
+        $status_class = (\mult1mate\crontab\TaskInterface::TASK_STATUS_ACTIVE == $t->getStatus()) ? '' : 'text-danger';
+        $ts =  $t->getTs() ;
+        $ts_updated =$t->getTsUpdated() ;
         ?>
         <tr>
             <td>
-                <input type="checkbox" value="<?= $t->task_id ?>" class="task_checkbox">
+                <input type="checkbox" value="<?= $t->getTaskId() ?>" class="task_checkbox">
             </td>
-            <td><?= $t->task_id ?></td>
-            <td><?= $t->time ?></td>
-            <td><?= $t->command ?></td>
-            <td class="<?= $status_class ?>"><?= $t->status ?></td>
-            <td><?= $t->comment ?></td>
+            <td><?= $t->getTaskId() ?></td>
+            <td><?= $t->getTime() ?></td>
+            <td><?= $t->getCommand() ?></td>
+            <td class="<?= $status_class ?>"><?= $t->getStatus() ?></td>
+            <td><?= $t->getComment() ?></td>
             <td><?= $ts ?></td>
             <td><?= $ts_updated ?></td>
             <td>
-                <a href="?m=taskEdit&task_id=<?= $t->task_id ?>">Edit</a>
+                <a href="?m=taskEdit&task_id=<?= $t->getTaskId() ?>">Edit</a>
             </td>
             <td>
-                <a href="?m=taskLog&task_id=<?= $t->task_id ?>">Log</a>
+                <a href="?m=taskLog&task_id=<?= $t->getTaskId() ?>">Log</a>
             </td>
             <td>
-                <a href="<?= $t->task_id ?>" class="run_task">Run</a>
+                <a href="<?= $t->getTaskId() ?>" class="run_task">Run</a>
             </td>
         </tr>
     <?php endforeach; ?>
