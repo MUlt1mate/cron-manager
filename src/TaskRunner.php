@@ -28,10 +28,14 @@ class TaskRunner
                 continue;
             }
 
-            $cron = CronExpression::factory($t->getTime());
+            try {
+                $cron = CronExpression::factory($t->getTime());
 
-            if ($cron->isDue($date)) {
-                self::runTask($t);
+                if ($cron->isDue($date)) {
+                    self::runTask($t);
+                }
+            } catch (\Exception $e) {
+                echo 'Caught an exception: ' . get_class($e) . ': ' . PHP_EOL . $e->getMessage() . PHP_EOL;
             }
         }
     }

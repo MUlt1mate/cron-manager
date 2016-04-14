@@ -54,7 +54,7 @@ composer require mult1mate/cron-manager
 See also examples for [ActiveRecord](https://github.com/MUlt1mate/cron-manager/tree/master/examples/active_record), 
 [CodeIgniter](https://github.com/MUlt1mate/cron-manager/tree/master/examples/codeigniter), 
 [Yii2](https://github.com/MUlt1mate/cron-manager/tree/master/examples/yii2_basic),
-[File storage](https://github.com/MUlt1mate/cron-manager/tree/master/examples/file_storage),
+[File storage](https://github.com/MUlt1mate/cron-manager/tree/master/examples/file_storage)
 
 ## Screenshots
 
