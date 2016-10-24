@@ -38,7 +38,7 @@ $menu = array(
         <?php foreach ($menu as $m => $text):
             $class = (isset($_GET['m']) && ($_GET['m'] == $m)) ? 'active' : '';
             ?>
-            <li class="<?= $class ?>"><a href="/TasksController/<?= $m ?>"><?= $text ?></a></li>
+            <li class="<?= $class ?>"><a href="<?php echo site_url("TasksController/$m"); ?>"><?php echo $text ?></a></li>
         <?php endforeach; ?>
     </ul>
     <br>
