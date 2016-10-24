@@ -43,13 +43,13 @@ $this->load->view('tasks/template');
             <td><?= $t->ts ?></td>
             <td><?= $t->ts_updated ?></td>
             <td>
-                <a href="/TasksController/taskEdit?task_id=<?= $t->task_id ?>">Edit</a>
+                <a href="<?php echo site_url('TasksController/taskEdit') ?>?task_id=<?= $t->task_id ?>">Edit</a>
             </td>
             <td>
-                <a href="/TasksController/taskLog?task_id=<?= $t->task_id ?>">Log</a>
+                <a href="<?php echo site_url('TasksController/taskLog') ?>?task_id=<?= $t->task_id ?>">Log</a>
             </td>
             <td>
-                <a href="<?= $t->task_id ?>" class="run_task">Run</a>
+                <a href="<?php echo site_url('TasksController') ?>/<?= $t->task_id ?>" class="run_task">Run</a>
             </td>
         </tr>
     <?php endforeach; ?>
