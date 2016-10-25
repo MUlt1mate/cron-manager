@@ -31,8 +31,9 @@ $this->load->view('tasks/template');
             <td><?= $r->ts ?></td>
             <td>
                 <?php if (!empty($r->output)): ?>
-                    <a href="<?= $r->task_run_id ?>" data-toggle="modal" data-target="#output_modal"
-                       class="show_output">Show output</a>
+                    <a href="#" data-toggle="modal" data-target="#output_modal"
+                       class="show_output" data-controller="<?php echo site_url('TasksController') ?>"
+                       data-task-run-id="<?php echo $r->task_run_id ?>">Show output</a>
                 <?php endif; ?>
             </td>
         </tr>

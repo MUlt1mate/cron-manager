@@ -49,7 +49,9 @@ $this->load->view('tasks/template');
                 <a href="<?php echo site_url('TasksController/taskLog') ?>?task_id=<?= $t->task_id ?>">Log</a>
             </td>
             <td>
-                <a href="<?php echo site_url('TasksController') ?>/<?= $t->task_id ?>" class="run_task">Run</a>
+                <a href="#" class="run_task"
+                   data-task-id="<?php echo $t->task_id ?>"
+                   data-controller="<?php echo site_url('TasksController'); ?>">Run</a>
             </td>
         </tr>
     <?php endforeach; ?>
@@ -87,6 +89,7 @@ $this->load->view('tasks/template');
         <label for="command">Command</label>
         <input type="text" class="form-control" id="command" name="command" placeholder="Controller::method"
                style="width: 300px;">
+        <input type="hidden" id="controller" name="controller" value="<?php echo site_url('TasksController'); ?>" />
     </div>
     <input type="submit" value="Run" class="btn btn-primary" id="run_custom_task">
 </form>
