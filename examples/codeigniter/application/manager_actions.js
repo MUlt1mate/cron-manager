@@ -57,6 +57,7 @@ $(function () {
     });
 
     function getRunDates() {
+        controller_url = $('#controller').val();
         $.post(controller_url + 'getDates', {time: $('#time').val()}, function (data) {
             $('#dates_list').html(data);
         })
