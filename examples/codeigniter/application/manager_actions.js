@@ -2,7 +2,8 @@ $(function () {
     var controller_url = '/TasksController/';
     //tasks list page
     $('.run_task').click(function () {
-        run_task({task_id: $(this).attr('href')});
+        controller_url = $(this).attr('data-controller');
+        run_task({task_id: $(this).attr('data-task-id')});
         return false;
     });
     $('#select_all').change(function () {
@@ -26,12 +27,14 @@ $(function () {
         return false;
     });
     $('.show_output').click(function () {
-        $.post(controller_url + 'getOutput', {task_run_id: $(this).attr('href')}, function (data) {
+        controller_url = $(this).attr('data-controller');
+        $.post(controller_url + '/getOutput', {task_run_id: $(this).attr('data-task-run-id')}, function (data) {
             $('#output_container').html(data);
             return false;
         })
     });
     $('#run_custom_task').click(function () {
+        controller_url = $('#controller').val();
         run_task({custom_task: $('#command').val()});
         return false;
     });
@@ -40,7 +43,7 @@ $(function () {
         if (confirm('Are you sure?')) {
             $('#output_section').show();
             $('#task_output_container').text('Running...');
-            $.post(controller_url + 'runTask', data, function (data) {
+            $.post(controller_url + '/runTask', data, function (data) {
                 $('#task_output_container').html(data);
             }).fail(function () {
                 alert('Server error has occurred');
