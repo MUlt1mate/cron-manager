@@ -38,6 +38,7 @@ $this->load->view('tasks/template');
         <div class="form-group">
             <label for="comment">Comment</label>
             <input type="text" class="form-control" id="comment" name="comment" value="<?= $task->comment ?>">
+            <input type="hidden" id="controller" name="controller" value="<?php echo site_url('TasksController'); ?>" />
         </div>
 
         <?php if ($task->task_id): ?>
