@@ -20,7 +20,7 @@ $this->title = 'Task Manager - Report';
         <input type="date" value="<?= $date_end ?>" name="date_end" id="date_end" class="form-control">
     </div>
     <div class="form-group">
-        <input type="hidden" value="tasksReport" name="r">
+        <input type="hidden" value="tasks-report" name="r">
         <input type="submit" value="Update" class="btn btn-primary">
     </div>
 

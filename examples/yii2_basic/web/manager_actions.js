@@ -1,5 +1,5 @@
 window.onload = function () {
-    var controller_url = '/?r=tasks/';
+    var controller_url = window.location.origin+window.location.pathname+'/?r=tasks/';
     //tasks list page
     $('.run_task').click(function () {
         run_task({task_id: $(this).attr('href')});
