@@ -39,7 +39,7 @@ class Task extends ActiveRecord implements TaskInterface
 
     public static function getAll()
     {
-        return self::findAll([]);
+        return self::find()->all();
     }
 
     public static function getReport($date_begin, $date_end)
