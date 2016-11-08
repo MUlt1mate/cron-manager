@@ -43,7 +43,7 @@ class DbHelper
         `command` VARCHAR(256) NOT NULL,
         `status` ENUM('active','inactive','deleted') DEFAULT 'active',
         `comment` VARCHAR(256) DEFAULT NULL,
-        `ts` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `ts` TIMESTAMP NOT NULL DEFAULT 0,
         `ts_updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (`task_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8";
