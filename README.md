@@ -1,5 +1,7 @@
 # PHP Cron tasks manager
 
+[![Join the chat at https://gitter.im/MUlt1mate/cron-manager](https://badges.gitter.im/MUlt1mate/cron-manager.svg)](https://gitter.im/MUlt1mate/cron-manager?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This is a flexible tasks manager designed for MVC-type applications. It's used instead of standard linux *crontab* command.
 
 The purpose of this tool is to provide an easy way to manipulate repetitive tasks. 
