@@ -25,5 +25,4 @@ $menu = array(
         <?php endforeach; ?>
     </ul>
     <br>
-    <?= $content ?>
 </div>
