@@ -6,7 +6,7 @@ php:
   - 5.6
   - 7.0
 
-install: composer update --dev --no-interaction
+install: composer update --no-interaction
 
 script: phpunit --coverage-text
 

@@ -16,6 +16,9 @@ class TaskLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($set));
     }
 
+    /**
+     * @throws \mult1mate\crontab\TaskManagerException
+     */
     public function testGetAllMethods()
     {
         $result = TaskLoader::getAllMethods(
@@ -25,18 +28,27 @@ class TaskLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($result));
     }
 
+    /**
+     * @throws \mult1mate\crontab\TaskManagerException
+     */
     public function testGetAllMethodsExceptions()
     {
         $this->setExpectedException('mult1mate\crontab\TaskManagerException');
         TaskLoader::getAllMethods('/mocks/');
     }
 
+    /**
+     * @throws \mult1mate\crontab\TaskManagerException
+     */
     public function testGetControllerMethodsExceptions()
     {
         $this->setExpectedException('mult1mate\crontab\TaskManagerException');
         TaskLoader::getControllerMethods('/mocks/');
     }
 
+    /**
+     * @throws \mult1mate\crontab\TaskManagerException
+     */
     public function testLoadControllerExceptionsFile()
     {
         $this->setExpectedException('mult1mate\crontab\TaskManagerException');
@@ -44,6 +56,9 @@ class TaskLoaderTest extends \PHPUnit_Framework_TestCase
         TaskLoader::loadController('FileWithoutClass');
     }
 
+    /**
+     * @throws \mult1mate\crontab\TaskManagerException
+     */
     public function testLoadControllerExceptions()
     {
         $this->setExpectedException('mult1mate\crontab\TaskManagerException');

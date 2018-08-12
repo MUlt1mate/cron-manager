@@ -161,6 +161,7 @@ class TaskManager
      * @param string $php_bin
      * @param string $input_file
      * @return string
+     * @throws TaskManagerException
      */
     public static function getTaskCrontabLine($task, $path, $php_bin, $input_file)
     {
