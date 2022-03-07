@@ -4,8 +4,6 @@ This is a flexible tasks manager designed for MVC-type applications. It's used i
 
 The purpose of this tool is to provide an easy way to manipulate repetitive tasks. 
 
-[Live Demo](https://cron.multimate.ru)
-
 [![Build Status](https://travis-ci.org/MUlt1mate/cron-manager.svg?branch=master)](https://travis-ci.org/MUlt1mate/cron-manager)
 [![Code Climate](https://codeclimate.com/github/MUlt1mate/cron-manager/badges/gpa.svg)](https://codeclimate.com/github/MUlt1mate/cron-manager)
 [![Test Coverage](https://codeclimate.com/github/MUlt1mate/cron-manager/badges/coverage.svg)](https://codeclimate.com/github/MUlt1mate/cron-manager/coverage)
@@ -62,8 +60,6 @@ See also examples for [ActiveRecord](https://github.com/MUlt1mate/cron-manager/t
 ![Report](https://cron.multimate.ru/img/Selection_008.png)
 ![Logs](https://cron.multimate.ru/img/Selection_007.png)
 ![Import and export](https://cron.multimate.ru/img/Selection_003.png)
-
-See [Live Demo](https://cron.multimate.ru) for more!
 
 ## Changelog
 
